@@ -14,14 +14,14 @@
                 padding: .4em;
                 font-size: 16pt;
             }
-            input[type=text] {
+            input[type=text], input[type=number] {
                 width: 90%;
             }
             .hide {
                 display: none !important;
             }
             @media screen and (min-width: 500px) {
-                input[type=text] {
+                input[type=text], input[type=number] {
                     width: 4em;
                 }
                 label {
@@ -67,19 +67,19 @@
                     <div>
                         <div>
                             <label for="win">Win:</label>
-                            <input type="text" id="win" name="win" select>
+                            <input type="number" id="win" name="win" select>
                         </div>
                         <div>
                             <label for="defend">Defend:</label>
-                            <input type="text" id="defend" name="defend" select>
+                            <input type="number" id="defend" name="defend" select>
                         </div>
                         <div>
                             <label for="place">Place:</label>
-                            <input type="text" id="place" name="place" select>
+                            <input type="number" id="place" name="place" select>
                         </div>
                         <div>
                             <label for="total">Total:</label>
-                            <input type="text" id="total" name="total" disabled>
+                            <input type="number" id="total" name="total" disabled>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
             };
 
             function clearInputs() {
-                var textBoxes = document.querySelectorAll("input[type=text]");
+                var textBoxes = document.querySelectorAll("input[type=number]");
                 forEach(textBoxes, function(tb) {
                     tb.value = "";
                 });
@@ -179,7 +179,7 @@
                 populateStandings(e);
             }
 
-            var tboxes = document.querySelectorAll('input[type=text]');
+            var tboxes = document.querySelectorAll('input[type=number]');
             forEach(tboxes, function(tbox) {
                 tbox.onkeyup = calculateTotal;
             });

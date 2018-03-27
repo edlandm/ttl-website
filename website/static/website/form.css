@@ -34,6 +34,7 @@ input[type=submit]:hover {
     input[type=text],
     input[type=password],
     input[type=url],
+    input[type=number],
     input[type=email] {
         padding: .8em .2em;
         font-size: 16pt;
