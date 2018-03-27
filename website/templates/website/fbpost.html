@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+
+        <meta name=viewport content='width=700'>
+        <link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
+
+        <style>
+            #content p {
+                padding: 2em;
+            }
+        </style>
+    </head>
+    <body>
+        {% include "website/logo_and_header.html" with header="Generate FB Post" %}
+        <div id="navbar-container">
+            {% include "website/updates_navbar.html" %}
+        </div>
+
+        <div id="content">
+            <h2>{{clue.date|date:"SHORT_DATE_FORMAT" }}: <a href="{{clue.url}}">{{clue.title}}</a></h2>
+            <p>{{string|linebreaksbr}}</p>
+            <h2><a href="https://www.facebook.com/TriviaTimeLive/">Go to facebook page</a></h3>
+        </div>
+        <script type="text/javascript">
+            // select text when clicked on (for easy copy&paste)
+            // credit:
+            // https://stackoverflow.com/questions/6139107/programmatically-select-text-in-a-contenteditable-html-element
+            function selectElementContents(e) {
+                var el = e.target,
+                    range = document.createRange();
+                range.selectNodeContents(el);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+
+            var el = document.getElementById("content").querySelector('p');
+            el.onclick = selectElementContents;
+        </script>
+    </body>
+</html>

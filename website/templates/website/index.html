@@ -1,0 +1,46 @@
+{% load static %}
+
+<meta name=viewport content='width=700'>
+<link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'website/index.css' %}" />
+<script src="{% static 'website/util.js' %}"></script>
+
+{% include "website/logo_and_header.html" with header=""%}
+
+<div id="index-navbar-container">
+{% include "website/navbar.html" %}
+</div>
+
+<div id="daily-updates">
+    <div id="games">
+        <h2>Play Tonight!</h2>
+        <ul>
+            {% for game in todays_games %}
+            <li {% if game.is_pennant_game_today %}class="pennant"{% endif %}>
+            {{ game.name }} -
+            {%if game.city not in game.name %} {{ game.city }}{% endif %} ({{ game.time|time:"g:iA"|lower }})
+            </li>
+            {% if game.is_pennant_game_today %}
+            <li class="pennant">{{ game.pennant_district }} PENNANT GAME</li>
+            {% endif %}
+            {% empty %}
+            <li>No games today</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="clue">
+        <h2>Check The Clue!</h2>
+        <p>
+        {% if todays_clue.url %}
+        <a href="{{ todays_clue.url }}">{{ todays_clue.title }}</a>
+        {% else %}
+        {{ todays_clue.title }}
+        {% endif %}
+        </p>
+    </div>
+</div>
+
+<!--<h1>Upcoming</h1>-->
+<div id="carousel-container">
+{% include "website/carousel.html" %}
+</div>

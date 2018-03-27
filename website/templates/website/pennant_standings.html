@@ -1,0 +1,31 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'website/pennant_standings.css' %}" />
+
+{% for venue in content %}
+{% ifchanged venue.pennant_district %}
+{% if not forloop.first %}</table>{% endif %}
+<h2>{{ venue.pennant_district }}</h2>
+<table class="sortable">
+    <thead>
+        <th>Venue</th>
+        <th>W<span class="mobile-hidden">in</span></th>
+        <th>D<span class="mobile-hidden">efend</span></th>
+        <th>P<span class="mobile-hidden">lace</span></th>
+        <th>T<span class="mobile-hidden">otal</span></th>
+    </thead>
+{% endifchanged %}
+    {% with standings=venue.pennantstandings %}
+    <tr>
+        <td>{{venue.name}}</td>
+        <td>{{standings.win}}</td>
+        <td>{{standings.defend}}</td>
+        <td>{{standings.place}}</td>
+        <td>{{standings.total_points}}</td>
+    </tr>
+    {% endwith %}
+{% endfor %}
+</table>
+
+<!-- sorttable.js - Documentation here:
+     https://kryogenix.org/code/browser/sorttable/ -->
+<script src="{% static 'website/sorttable.js' %}" type="text/javascript"></script>

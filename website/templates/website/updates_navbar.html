@@ -1,0 +1,17 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'website/navbar.css' %}" />
+<div id="navbar">
+    <!--I don't have any links that require dropdowns yet, but this is how to do it-->
+    <!--<div class="dropdown">-->
+        <!--<button>About</button>-->
+        <!--<div class="content">-->
+            <!--<a href="">Details</a>-->
+            <!--<a href="">How To Play / FAQ</a>-->
+        <!--</div>-->
+    <!--</div>-->
+    <a href="{% url 'website:move_pennant' %}">Move Pennant</a>
+    <a href="{% url 'website:update_standings' %}">Update Pennant Standings</a>
+    <a href="{% url 'website:fbpost' 'today' %}">Today's FB post</a>
+    <a href="{% url 'website:fbpost' 'tomorrow' %}">Tomorrow's FB post</a>
+    <a href="{% url 'website:logout' %}">Logout</a>
+</div>

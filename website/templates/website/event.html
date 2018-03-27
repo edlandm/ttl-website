@@ -1,0 +1,12 @@
+<h2></h2>
+{% with content as event %}
+<div class="main-centered">
+  <dl>
+    <dt>Where</dt>
+    <dd>{{event.location|linebreaksbr}}</dd>
+    <dt>When</dt>
+    <dd>{{event.time}}</dd>
+  </dl>
+  <p>{{event.description|linebreaksbr}}</p>
+</div>
+{% endwith %}

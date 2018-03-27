@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
+<script src="{% static 'website/util.js' %}"></script>
+
+{% include "website/logo_and_header.html" %}
+
+<div id="navbar-container">
+{% include "website/navbar.html" %}
+</div>
+
+<div id="content">
+{% include template with content=content %}
+</div>

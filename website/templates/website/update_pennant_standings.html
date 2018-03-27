@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+
+        <meta name=viewport content='width=700'>
+        <link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'website/form.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'website/move_pennant.css' %}" />
+
+        <style>
+            select {
+                padding: .4em;
+                font-size: 16pt;
+            }
+            input[type=text] {
+                width: 90%;
+            }
+            .hide {
+                display: none !important;
+            }
+            @media screen and (min-width: 500px) {
+                input[type=text] {
+                    width: 4em;
+                }
+                label {
+                    display: inline;
+                }
+                #standings {
+                    display: table;
+                    table-layout: fixed;
+                    width: 100%;
+                }
+                #standings>div {
+                    display: table-row;
+                }
+                #standings>div>div {
+                    display: table-cell;
+                    width: 25%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        {% include "website/logo_and_header.html" with header="Move The Pennant"%}
+        <div id="navbar-container">
+            {% include "website/updates_navbar.html" %}
+        </div>
+
+        <div id="content">
+            {% if success %}
+            <h2>Standings successfully changed</h2>
+            {% elif error %}
+            <h2 class="error-messag">{{error}}</h2>
+            {% endif %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                <select id="venue" name="venue" style="text-align: center" autofocus>
+                    <option value="">----Select A Venue----</option>
+                    {% for venue in venues %}
+                    <option value="{{venue.code}}">{{venue.name}}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <div id="standings" class="hide">
+                    <div>
+                        <div>
+                            <label for="win">Win:</label>
+                            <input type="text" id="win" name="win" select>
+                        </div>
+                        <div>
+                            <label for="defend">Defend:</label>
+                            <input type="text" id="defend" name="defend" select>
+                        </div>
+                        <div>
+                            <label for="place">Place:</label>
+                            <input type="text" id="place" name="place" select>
+                        </div>
+                        <div>
+                            <label for="total">Total:</label>
+                            <input type="text" id="total" name="total" disabled>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" value="Submit" class="hide">
+            </form>
+        </div>
+
+        <script type="text/javascript" src="{% static 'website/util.js' %}"></script>
+        <script type="text/javascript">
+            var standings = {
+                {% for v in venues %}
+                {{v.code}}: {
+                    win: {{v.pennantstandings.win}},
+                    defend: {{v.pennantstandings.defend}},
+                    place: {{v.pennantstandings.place}},
+                    total: {{v.pennantstandings.total_points}}},
+                {% endfor %}
+            };
+
+            function clearInputs() {
+                var textBoxes = document.querySelectorAll("input[type=text]");
+                forEach(textBoxes, function(tb) {
+                    tb.value = "";
+                });
+            }
+
+            function calculateTotal() {
+                var win = document.getElementById('win'),
+                    defend = document.getElementById('defend'),
+                    place  = document.getElementById('place'),
+                    total  = document.getElementById('total'),
+                    n = Number;
+                total.value = 2 * (n(win.value) + n(defend.value)) + n(place.value);
+            }
+
+            function populateStandings(e) {
+                var venue = e.currentTarget.value,
+                    standing = standings[venue];
+                clearInputs();
+                if(standing) {
+                    forEach(["win", "defend", "place", "total"],
+                        function(n) {
+                            var input = document.getElementById(n);
+                                input.value = standing[n];
+                        });
+                }
+            }
+
+            function unhideInputs(e) {
+                var hidden = document.querySelectorAll(".hide");
+                forEach(hidden, function(el) {
+                    removeClass(el, "hide");
+                });
+            }
+
+            function validate(form) {
+                // Validates form and returns cleaned data if valid, else returns false
+                var venue = document.getElementById("venue"),
+                    win    = document.getElementById('win'),
+                    defend = document.getElementById('defend'),
+                    place  = document.getElementById('place'),
+                    button = document.querySelector("input[type=submit]");
+                if(venue.value === "") {
+                    errorMessage(button, "Please select a venue", {position: 'before'});
+                    return false;
+                }
+                [win, defend, place].forEach(function(n) {
+                    if(n.value === "" || isNaN(n.value)) {
+                        console.log(n);
+                        errorMessage(button,
+                            "Invalid value for " + n.name,
+                            {position: 'before'});
+                        return false;
+                    }
+                });
+                var token = form.querySelector("input[type=hidden]").value;
+                return {
+                    venue: venue.value,
+                    win: win.value,
+                    defend: defend.value,
+                    place: place.value,
+                    csrfmiddlewaretoken: token};
+            }
+
+            function submit(e) {
+                e.preventDefault();
+                clearErrors();
+                var form = e.target,
+                    data = validate(form);
+                if(data)
+                    post("{% url 'website:update_standings' %}", data);
+            }
+
+            var select = document.getElementById("venue");
+            select.onchange = function(e) {
+                unhideInputs(e);
+                populateStandings(e);
+            }
+
+            var tboxes = document.querySelectorAll('input[type=text]');
+            forEach(tboxes, function(tbox) {
+                tbox.onkeyup = calculateTotal;
+            });
+
+            var form = document.forms[0];
+            form.onsubmit = submit;
+
+            select.focus();
+        </script>
+    </body>
+</html>

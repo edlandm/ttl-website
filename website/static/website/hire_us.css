@@ -1,0 +1,44 @@
+form {
+    display: none;
+}
+#id_business_or_event0:checked ~ #business-form {
+    display: block;
+}
+#id_business_or_event1:checked ~ #event-form {
+    display: block;
+}
+
+.form {
+
+}
+
+/*
+ * mobile only
+ */
+@media screen and (max-width: 500px) {
+    ul#id_business_multiple_locations,
+    ul#id_survey_previous_trivia
+    {
+        display: table;
+        table-layout: fixed;
+    }
+    ul#id_business_multiple_locations li,
+    ul#id_survey_previous_trivia li
+    {
+        display: table-cell;
+        width: 10%;
+    }
+}
+/*
+ * larger screens
+ */
+@media screen and (min-width: 500px) {
+    p, ul, input[type=submit] {
+        width: 80%;
+        margin: auto;
+        display: block;
+    }
+    input[type=submit] {
+        margin-top: 10px;
+    }
+}

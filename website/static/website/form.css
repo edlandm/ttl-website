@@ -1,0 +1,48 @@
+input[type=text],
+input[type=password],
+input[type=url],
+input[type=email],
+input[type=submit],
+select,
+textarea {
+    width: 100%;
+}
+
+ul {
+    list-style-type: none
+}
+
+input[type=submit] {
+    background-color: #008CBA;
+    border: 2px solid #008CBA;
+    padding: 15px 32px;
+    border-radius: 20px;
+    color: white;
+    font-size: 15pt;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+input[type=submit]:hover {
+    background-color: white;
+    color: black;
+}
+
+/*
+ * mobile only
+ */
+@media screen and (max-width: 500px) {
+    input[type=text],
+    input[type=password],
+    input[type=url],
+    input[type=email] {
+        padding: .8em .2em;
+        font-size: 16pt;
+    }
+    select {
+        padding: .4em .2em;
+        font-size: 16pt;
+    }
+    label {
+        font-size: 18pt;
+    }
+}

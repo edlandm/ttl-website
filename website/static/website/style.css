@@ -1,0 +1,125 @@
+/*
+ * General, sitewide settings
+ */
+:root {
+    --main-bg-color:   #337989;
+    --second-bg-color: #0D5060;
+    --main-fg-color:   #EBE585;
+    --content-color:   #F1F1F1;
+
+    /*Navbar*/
+    /*I'm not sure which bg-color better...*/
+    /*--navbar-bg-color: #2E4272;*/
+    /*--navbar-bg-color: #283C86;*/
+    --navbar-bg-color: var(--second-bg-color);
+    /*--navbar-focus-color: #4F628E;*/
+    --navbar-focus-color: #508F9E;
+
+    --carousel-slide-1: var(--main-bg-color);
+    --carousel-slide-2: #3BA5B7;
+    --carousel-slide-3: #1E933D;
+    --carousel-slide-4: #415396;
+
+    --underline-color: #172969;
+    --underline-hover-color: var(--navbar-focus-color);
+    --underline-hover-color2: #FFFFAA;
+}
+@font-face {
+    font-family: rockwell;
+    src: url(rockwell.ttf);
+}
+@font-face {
+    font-family: rockwell-condensed;
+    src: url(RockwellStd.otf);
+}
+body {
+    background-color: var(--main-bg-color);
+    color: white;
+    font-family: rockwell, serif;
+}
+h1, h2 {
+    text-align: center;
+    color: var(--main-fg-color);
+    font-family: rockwell-condensed, serif;
+}
+
+a {
+    border-bottom: 2px solid var(--underline-color);
+    transition: all .2s;
+    text-decoration: none;
+}
+#logo a {
+    border-bottom: none;
+}
+h1 a:hover, h2 a:hover, h3 a:hover {
+    border-bottom: 2px solid var(--underline-hover-color2);
+}
+p a:hover {
+    border-bottom: 2px solid var(--underline-hover-color);
+}
+p a {
+    color: var(--content-color);
+}
+p a:active {
+    color: white;
+}
+p a:visited {
+    color: #CCF;
+}
+
+#content {
+    /*background-color: #FFF;*/
+    /*background-color: #CCC;*/
+    background-color: var(--content-color);
+    color: black;
+    font-size: 16pt;
+    margin: auto;
+    padding-top: 1px;
+    padding-bottom: 1em;
+}
+
+#content h1, #content h2, #content h3, #content h4 {
+    color: var(--main-bg-color);
+}
+#content table, #content dl {
+    color: #000;
+    margin: auto;
+    font-size: 16pt;
+}
+#content dt {
+    font-weight: bold;
+}
+#content dl dd {
+    margin-bottom: 0.5em;
+}
+#navbar-container {
+    margin: auto;
+}
+.main-centered {
+    width: 90%;
+    margin: auto;
+}
+
+/*
+ * Screen-size specific stuff
+ */
+@media screen and (max-width: 500px) {
+    /* Narrow screens */
+    #content table {
+        width: 100%;
+        padding: 0 5px;
+        overflow-x: scroll;
+    }
+}
+@media screen and (min-width: 500px) {
+    /* Wide--errr... "homely" screens */
+    #content {
+        width: 80%;
+    }
+    #content table {
+    }
+    #navbar-container {
+        width: 80%;
+    }
+
+}

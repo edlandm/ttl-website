@@ -1,0 +1,98 @@
+#header {
+    margin: auto;
+    font-size: 16pt;
+}
+#header h1 {
+    text-align: center;
+    margin: auto;
+    margin-bottom: 0px;
+}
+#logo {
+    text-align: center;
+}
+#logo img {
+    width: 100%;
+    height: auto;
+}
+#index-navbar-container #navbar {
+    margin-top: 0.5em;
+}
+
+#daily-updates {
+    margin: auto;
+    margin-top: 2em;
+}
+#daily-updates h2 {
+    font-size: 24pt;
+    margin-bottom: 0;
+}
+#daily-updates div {
+    /*background: rgba(0,0,0,.3);*/
+    background: var(--second-bg-color);
+    border-radius: 20px;
+    text-align: center;
+    vertical-align: top;
+    padding-bottom: .5em;
+}
+li.pennant {
+    color: var(--main-fg-color);
+}
+li.pennant:before {
+    content: "** ";
+    font-weight: bold;
+}
+@media screen and (max-width: 500px) {
+    /* Phones and devices with small/narrow screens */
+    #daily-updates {
+        width: 100%;
+        display: block;
+    }
+    #daily-updates div {
+        margin-bottom: 1em;
+        padding-top: 0.1em;
+        padding-bottom: 1em;
+    }
+    #games ul {
+        margin: auto;
+    }
+    #games ul li {
+        line-height: 1.5em;
+        text-align: left;
+    }
+    #games li:not(.pennant) {
+        list-style: circle;
+    }
+    #games li.pennant {
+        list-style: disc;
+    }
+}
+@media screen and (min-width: 500px) {
+    /* Desktop monitors, tablets, wide screens */
+    #logo {
+        width: 25%;
+        margin: auto;
+    }
+    #header {
+        font-size: 18pt;
+    }
+    #games ul {
+        padding-left: 15%;
+    }
+    #games ul li {
+        text-align: left;
+        display: block;
+    }
+    #daily-updates {
+        width: 70%;
+        display: table; /* This makes the divs be the same height - smh */
+        border-spacing: 0.8em;
+        border-collapse: separate;
+    }
+    #daily-updates div {
+        display: table-cell; /* They're my divs and I'll display them how I want damnit! */
+        width: 50%;
+    }
+    #daily-updates h2 {
+        margin-bottom: -.2em;
+    }
+}

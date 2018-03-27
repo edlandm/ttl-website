@@ -1,0 +1,47 @@
+<h2>How To Play</h2>
+<div class="main-centered">
+    <p>
+        Trivia Time Live is a game of 20 questions broken down into 4 rounds of
+        5 questions each...
+    </p>
+
+    {% lorem 3 p %}
+</div>
+
+<h2>FAQ</h2>
+<div id="faq" class="main-centered">
+    <dl>
+        <dt>How many players are allowed on a team?</dt>
+        <dd>No more than 8</dd>
+
+        <dt>Can I bring my own food?</dt>
+        <dd>It depends on the venue. Feel free to ask them :)</dd>
+
+        <dt>Can I bring dogs/pets</dt>
+        <dd>This also depends on the venue. All we at Trivia Time Live ask is that the owners be housebroken.</dd>
+
+        <dt>What's the deal with cellphones?</dt>
+        <dd>They make you look goofy :P</dd>
+
+        <dt>Where can I find the clue?</dt>
+        <dd>
+            Either the front page of this <a href="{% url 'website:index' %}">website</a>
+            or our <a href="https://www.facebook.com/TriviaTimeLive/">facebook</a>
+        </dd>
+
+        <dt>Can I hire you to host at my venue?</dt>
+        <dd>Yes! Please contact us <a href="{% url 'website:hire_us' %}">here</a>!</dd>
+
+        <dt>Can I hire you to host a game at my private party/event?</dt>
+        <dd>Yes! Please contact us <a href="{% url 'website:hire_us' %}">here</a>!</dd>
+
+        <dt>I have a suggestion</dt>
+        <dd>We have <a href="{% url 'website:contact_questions' %}">a place for people like you</a> ;)</dd>
+
+        <dt>Is pineapple ok on pizza?</dt>
+        <dd>Are Tide-pods ok on pizza?</dd>
+
+        <dt>What's it like asking so many questions?</dt>
+        <dd>I could ask you the same thing.</dd>
+    </dl>
+</div>

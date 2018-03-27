@@ -1,0 +1,19 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'website/form.css' %}">
+<style>
+    .error {
+        color: red;
+    }
+</style>
+
+<h2>Please Log In</h2>
+<div class="main-centered">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if error %}
+        <span class="error">{{error}}</span>
+        {% endif %}
+        <input type="submit" value="Submit">
+    </form>
+</div>

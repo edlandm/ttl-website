@@ -1,0 +1,99 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'website/pennant_standings.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'palooza/standings.css' %}" />
+
+<style id="filter-style">
+    .hidden { display: none; }
+    tr:not(.hidden) {
+        border-bottom: 1px solid red;
+    }
+</style>
+
+<h2>STANDINGS</h2>
+<div id="filter-container">
+    <input type="textbox" id="filter" placeholder="Search by Name or Number">
+</div>
+<table id="standings" class="sortable">
+    <thead>
+        <th>Player #</th>
+        <th>Name</th>
+        <th>Points</th>
+    </thead>
+    <tbody>
+        {% for player in content %}
+        {% with points=player.points %}
+        <tr id="standings-{{player.id}}" class="
+            {% if points >= 50 and points < 200 %}gold
+            {% elif points >= 200 and points < 500 %}platinum
+            {% elif points >= 500 %}daimond
+            {% endif %}">
+            <td>{{player.padded_id}}</td>
+            <td>{{player.name}}</td>
+            <td>{{points}}</td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- sorttable.js - Documentation here:
+     https://kryogenix.org/code/browser/sorttable/ -->
+<script src="{% static 'website/sorttable.js' %}" type="text/javascript"></script>
+
+<script type="text/javascript">
+    // Stylesheet used only for filtering
+    filterStyle = document.getElementById('filter-style');
+    // State variable to remember what the last filter value was
+    lastFilter = '';
+    // A js-object of the standings table rows because it's easier to keep it
+    // in memery than to go through the DOM everytime the user uses the filter
+    standings = Array.prototype.map.call(
+            document.getElementById('standings').querySelectorAll('tbody tr'),
+            function(tr) {
+                var pid  = tr.children[0].innerText,
+                    name = tr.children[1].innerText;
+                return {id: tr.id, str: pid + ' ' + name};
+            });
+
+    // Filters through the table from the contents of the filter input-box
+    function filterTable(e) {
+        var input  = e.target,
+            filter = input.value.trim(),
+            filterRE = RegExp(filter, 'i'),
+            table  = document.getElementById('standings'),
+            filteredOut = standings.filter(function(n) {
+                return !filterRE.test(n.str);});
+
+        if(filter === lastFilter)
+            return;
+        else
+            lastFilter = filter;
+
+        if(!filter) { // If there's no filter, show all the rows
+            // disabling the stylesheet re-renders the hidden rows faster
+            // than removing the .hidden class from them
+            filterStyle.disabled = true;
+            return;
+        } else { // Hide all the rows that have been filtered out
+            // Unhide all rows from the last filter
+            forEach(
+                table.querySelectorAll('tr.hidden'),
+                function(tr) {
+                    console.log("removeClass for ");
+                    removeClass(tr, 'hidden'); });
+            console.log(table.querySelectorAll('tr.hidden'));
+
+            // Hide all rows that don't match
+            filteredOut.forEach(function(n) {
+                var tr = document.getElementById(n.id);
+                addClass(tr, 'hidden');
+            });
+            // Enable the filter style tag so that it actually works
+            filterStyle.disabled = false;
+            return;
+        }
+    }
+
+    var filterInput = document.getElementById('filter');
+    filterInput.onkeyup = debounce(filterTable, 180, false);
+</script>

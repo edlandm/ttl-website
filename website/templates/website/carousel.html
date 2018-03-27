@@ -1,0 +1,204 @@
+{% load static %}
+<style type="text/css">
+    #carousel {
+        width: 70%;
+        height: 250px;
+        margin: auto;
+        position: relative;
+        overflow: hidden;
+        background: var(--second-bg-color);
+        border: 2px solid var(--second-bg-color);
+        border-radius: 20px;
+    }
+
+    {% for a in announcements %}
+    .carousel-activator:nth-of-type({{forloop.counter}}):checked ~
+    .carousel-track {
+        transform: translateX(-{{forloop.counter0}}00%);
+    }
+    .carousel-activator:nth-of-type({{forloop.counter}}):checked ~
+    .carousel-track .carousel-slide:nth-of-type({{forloop.counter}}){
+        opacity: 1;
+    }
+    .carousel-activator:nth-of-type({{forloop.counter}}):checked ~
+    .carousel-controls:nth-of-type({{forloop.counter}}) {
+        display: block;
+    }
+    .carousel-track .carousel-slide:nth-of-type({{forloop.counter}}) {
+        transform: translateX({{forloop.counter0}}00%);
+    }
+    .carousel-activator:nth-of-type({{forloop.counter}}):checked ~
+    .carousel-indicators .carousel-indicator:nth-of-type({{forloop.counter}}) {
+        opacity: 1;
+    }
+    {% endfor %}
+
+    .carousel-controls {
+        display: none;
+    }
+    .carousel-control {
+        width:  40px;
+        height: 40px;
+        margin-top: -20px;
+        top: 50%;
+        position: absolute;
+        display: block;
+        cursor: pointer;
+        border-width: 5px 5px 0 0;
+        border-style: solid;
+        border-color: #FAFAFA;
+        opacity: .35;
+        outline: 0;
+        z-index: 3;
+        transition: opacity linear .1s;
+    }
+    .carousel-control:hover {
+        opacity: 1;
+    }
+    .carousel-backward {
+        left: 3%;
+        transform: rotate(-135deg);
+    }
+    .carousel-forward {
+        right: 3%;
+        transform: rotate(45deg);
+    }
+    .carousel-activator {
+        display: none;
+    }
+    .carousel-indicators {
+        position: absolute;
+        height: 14%;
+        width: 80%;
+        margin: auto;
+        left: 10%;
+        bottom: 0;
+        text-align: center;
+        font-size: 18pt;
+    }
+    .carousel-indicator {
+        display: inline-block;
+        vertical-align: sub;
+        opacity: 0.35;
+        transition: opacity linear .1s;
+    }
+    .carousel-indicator:hover {
+        opacity: 1;
+    }
+    .carousel-track {
+        position: absolute;
+        height: 85%;
+        width: 80%;
+        left: 10%;
+        margin: auto;
+
+        transition: transform .5s ease 0s;
+    }
+    .carousel-track .carousel-slide {
+        opacity: 0;
+        position: absolute;
+        height: 100%;
+        overflow-y: auto;
+        left: 0;
+        top: 0;
+        right: 0;
+        text-align: center;
+        transition: opacity linear .5s;
+    }
+
+    .carousel-slide h2 {
+        font-size: 24pt;
+    }
+    .carousel-slide a {
+        border-bottom: none;
+    }
+    .carousel-slide a * {
+        padding: 6px;
+    }
+    .carousel-slide a * {
+        border-bottom: 2px solid var(--underline-color);
+        display: inline-block;
+        transition: all .2s;
+    }
+    .carousel-slide a h2:after {
+        content: "\A";
+        white-space: pre;
+    }
+    .carousel-slide a p {
+        color: var(--content-color);
+    }
+    .carousel-slide a:hover * {
+        border-bottom: 2px solid var(--underline-hover-color);
+    }
+    .carousel-slide a:hover h2 {
+        border-bottom: 2px solid var(--underline-hover-color2);
+    }
+    .carousel-slide a:visited p {
+        color: #CCF;
+    }
+    .carousel-slide a:active * {
+        color: white;
+    }
+
+
+    @media screen and (max-width: 500px) {
+        #carousel {
+            width: 100%;
+        }
+        .carousel-control {
+            width: 30px;
+            height: 30px;
+        }
+    }
+</style>
+
+<div id="carousel">
+    <div class="carousel">
+        {% for a in announcements %}
+        <input type="radio" id="carousel-{{forloop.counter}}" name="activator"
+            class="carousel-activator" {%if forloop.first%}checked="checked"{%endif%}>
+        {% endfor %}
+
+        {% for a in announcements %}
+        <div class="carousel-controls">
+            <label for="carousel-{% if forloop.counter|add:"-1" == 0 %}{{announcements|length}}{% else %}{{forloop.counter|add:"-1"}}{% endif %}" class="carousel-control carousel-backward"></label>
+            <label for="carousel-{% if forloop.counter|add:"1" > announcements|length %}1{% else %}{{forloop.counter|add:"1"}}{% endif %}" class="carousel-control carousel-forward"></label>
+        </div>
+        {% endfor %}
+
+        <div class="carousel-track">
+            {% for a in announcements %}
+            <div class="carousel-slide"
+                style="background: linear-gradient(to bottom,
+                var(--carousel-slide-{% cycle '1' '2' '3' '4' %}), var(--second-bg-color));">
+            <!--<div class="carousel-slide"-->
+                <!--style="background: linear-gradient(to right, rgba(4, 124, 123, 0), rgba(4, 124, 123, 1));">-->
+            {% if a.url %}
+            <a href='{% if a.is_url_internal %}{% if "events" in a.url %}{% url "website:event" a.url|last %}{% else %}{% url a.url %}{% endif %}{% else %}{{a.url}}{% endif %}'>
+            {% endif %}
+                <h2>{{a.title}}</h2><br>
+                <p>{{a.description}}</p>
+                {% if a.url %}</a>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="carousel-indicators">
+            {% for a in announcements %}
+            <label class="carousel-indicator" for="carousel-{{forloop.counter}}">•</label>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function slideClick() {
+        // Advance to the next slide
+        var slide = this;
+        console.log(slide);
+    }
+
+    var slides = document.querySelectorAll('.carousel-slide');
+    forEach(slides,
+        function(slide) { slide.onclick = slideClick; });
+</script>

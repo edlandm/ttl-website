@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<head>
+    {% load static %}
+
+    <meta name=viewport content='width=700'>
+    <link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'website/move_pennant.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
+</head>
+<body>
+    {% include "website/logo_and_header.html" with header="Move The Pennant"%}
+    <div id="navbar-container">
+        {% include "website/updates_navbar.html" %}
+    </div>
+
+    <div id="content">
+        {% if success %}
+        <h2>Pennant successfully moved!</h2>
+        {% else %}
+        <h2>Select a pennant to move</h2>
+        {% endif %}
+
+        <form id="form" method="POST">
+        {% csrf_token %}
+        <div id="container">
+            <div id="current-pennants">
+                {% for pennant in pennants %}
+                <input type="radio" id="pennant-{{ forloop.counter }}"
+                name="pennant" value="{{ pennant.district }}">
+                <label for="pennant-{{ forloop.counter }}">
+                    <div class="pennant">
+                        <h3 class="district">{{ pennant.district }}</h3>
+                        Currently at: <b>{{ pennant.current }}</b><br>
+                        Next game: <input type="text" id="{{pennant.district}}-next-game"
+                            value="{{pennant.district.pennant.next_game|date:"m/d/y"}}">
+                    </div>
+                    <div class="venues">
+                        <h3>Move to:</h3>
+                        {% for venue in pennant.venues %}
+                        <input type="radio" id={{pennant.district}}-venue-{{forloop.counter}}
+                        name="venue" value="{{venue.code}}">
+                        <label for="{{pennant.district}}-venue-{{forloop.counter}}"><li>{{venue}}</li></label>
+                        {% endfor %}
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <script type="text/javascript" src="{% static 'website/util.js' %}"></script>
+    <script type="text/javascript" name="dropdown">
+        function dropdownClick() {
+            // Toggle the visibility of the dropdown content in the navbar
+            var button  = this,
+                content = button.nextElementSibling;
+            // toggleClass is a utility function that can be found in
+            // {% static 'website/util.js' %}
+            toggleClass(content, 'active');
+        };
+
+        // navbar: display dropdown menus when clicked
+        var dropdowns = document.querySelectorAll('.dropdown>button');
+        forEach(dropdowns,
+            function(button) { button.onclick = dropdownClick; });
+
+        // close dropdown if user clicks outside of it
+        window.onclick = function(e) {
+            if(!e.target.matches('.dropdown>button')) {
+            var dropdown = document.querySelector('.content.active');
+            if(dropdown)
+                dropdown.classList.remove('active');
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        // dates for the next games at each venue
+        var nextGames = {
+        {% for pennant in pennants %}
+        {% with district=pennant.district.name %}
+            {{district}}: {
+                {{pennant.current.code}}: "{{pennant.current.next_pennant_game|date:'m/d/y'}}",
+                {% for venue in pennant.venues %}{{venue.code}}: "{{venue.next_pennant_game|date:'m/d/y'}}",
+                {% endfor %}},
+        {% endwith %}
+        {% endfor %}};
+        // the venues where the pennants are currently residing
+        var currentVenues = {
+        {% for pennant in pennants %}
+            {{pennant.district.name}}: "{{pennant.current.code}}",
+        {% endfor %}};
+
+        function deselectVenues() {
+            // Uncheck any venues that may be selected
+            var venues = document.querySelectorAll("input[name=venue]");
+            forEach(venues, function(venue) {
+                venue.checked = false;
+            });
+        }
+
+        function resetNextGames() {
+            // Reset all "Next Games" input boxes to their original values
+            forEach(Object.keys(currentVenues), function(district) {
+                var nextGameInput = document.getElementById(district + "-next-game");
+                nextGameInput.value = nextGames[district][currentVenues[district]];
+            });
+        }
+
+        function scrollToIfExpanded(e) {
+            // Scroll to top of pennant section when selected
+            var pennant = e.target,
+                label   = pennant.nextElementSibling;
+            if(pennant.checked)
+                label.scrollIntoView();
+            deselectVenues();
+            resetNextGames();
+            clearErrors();
+        };
+
+        function setNextGame(e) {
+            // when a venue is selected, set the nextGame input value to that
+            // venue's next game date var input = e.target,
+            var input = e.target,
+                venue = input.value,
+                district = input.id.split('-')[0],
+                selectedNextGame = nextGames[district][venue],
+                selectedInput = input.parentNode.parentNode.querySelector('input[type=text]');
+            selectedInput.value = selectedNextGame;
+        }
+
+        function validate(form) {
+            // Validate form and return data
+            // If valid, returns data object, otherwise false
+            var errorDiv = form.querySelector(".error-message"),
+                data,
+                pennantInput = form.querySelector("input[name=pennant]:checked"),
+                venueInput = form.querySelector(
+                    "input[name=pennant]:checked+label>.venues>input:checked"),
+                nextGameInput = form.querySelector(
+                    "input[name=pennant]:checked+label>.pennant>input"),
+                pennant,
+                venue,
+                nextGame;
+
+            if (pennantInput && !venueInput) {
+                if(nextGameInput.value === nextGames[currentVenues[pennantInput.value]]) {
+                    // If the "next game" value was changed, that's fine.
+                    // Set venue to be the current venue
+                    venue = currentVenues[pennantInput.value];
+                } else {
+                    // No either venue was selected or the "Next Game" date wasn't changed
+                    errorMessage(
+                        nextGameInput.parentNode,
+                        "Please either select a venue or change the 'Next Game' date",
+                        {position: "after"});
+                    nextGameInput.parentNode.parentNode.scrollIntoView();
+                    nextGameInput.focus();
+                    return false;
+                }
+            } else if(!pennantInput || !venueInput || !nextGameInput) {
+                // No pennant was selected
+                errorMessage(
+                    document.querySelector("input[type=submit]"),
+                    "Please select a pennant",
+                    {position: "before"});
+                return false;
+            } else {
+                venue = venueInput.value;
+            }
+            // dates need the format "MM/DD/YY"
+            rdate = /^\d{2}\/\d{2}\/\d{2}$/;
+            pennant = pennantInput.value;
+            nextGame = nextGameInput.value;
+            if(!rdate.test(nextGame)) {
+                // date is in the wrong formatz
+                errorMessage(
+                    nextGameInput.parentNode,
+                    "Next game input needs to be in this format: MM/DD/YY",
+                    {position: "after"});
+
+                nextGameInput.parentNode.parentNode.scrollIntoView();
+                nextGameInput.focus();
+                return false;
+            }
+            var token = form.querySelector("input[type=hidden]").value;
+            return {pennant: pennant,
+                nextGame: nextGame,
+                venue: venue,
+                csrfmiddlewaretoken: token};
+        }
+
+        function formSubmit(e) {
+            // parse and validate form, clean data, and submit it
+            e.preventDefault();
+            clearErrors();
+            var form = e.target,
+                data = validate(form);
+            if(data)
+                post("{% url 'website:move_pennant' %}", data);
+            else
+                console.error("form not valid");
+        }
+
+        // Event listeners
+        var pennants = document.querySelectorAll("#current-pennants>input[type=radio]");
+        forEach(pennants, function(pennant) {
+            pennant.onchange = scrollToIfExpanded;
+        });
+        var venues = document.querySelectorAll("input[name=venue]");
+        forEach(venues, function(venue) {
+            venue.onchange = setNextGame;
+        });
+        var form = document.forms["form"];
+        form.addEventListener("submit", formSubmit);
+    </script>
+</body>

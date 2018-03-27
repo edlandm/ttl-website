@@ -1,0 +1,53 @@
+th, td {
+    font-size: 16pt;
+}
+td {
+    height: 2em;
+}
+tr.gold td {
+    background: gold;
+}
+tr.gold td:first-child {
+    background: linear-gradient(to top left, gold 85%, black 100%);
+}
+tr.gold td:last-child {
+    background: linear-gradient(to bottom right, gold 85%, black 100%);
+}
+tr.platinum td,
+tr.diamond td {
+    background: #EEE;
+}
+tr.platinum td:first-child,
+tr.diamond td:first-child {
+    background: linear-gradient(to top left, #EEE 75%, #666 100%);
+}
+tr.platinum td:last-child,
+tr.diamond td:last-child {
+    background: linear-gradient(to bottom right, #EEE 75%, #666 100%);
+}
+tr.diamond td:first-child::before, tr.diamond td:first-child::after {
+    content: " ♦ ";
+}
+#filter-container {
+    position: relative;
+    width: 90%;
+    margin-bottom: 2.6em;
+}
+#filter-container input {
+    position: absolute;
+    right: 0;
+}
+@media screen and (max-width: 500px) {
+    th {
+        text-align: center;
+    }
+    #filter-container {
+        width: 100%;
+    }
+    #filter-container * {
+        position: relative;
+    }
+    input {
+        width: 100%;
+    }
+}
