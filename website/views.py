@@ -91,13 +91,13 @@ class HowToPlay(ContentPage, generic.TemplateView):
 
 class ContactQuestions(ContentPage, generic.TemplateView):
     extra_context = {
-        "header": "You come to me on this, the day of my daughter's wedding...",
+        "header": "Contact",
         "template": "website/contact_questions.html",
         "content": None}
 
 class HireUs(ContentPage, generic.TemplateView):
     extra_context = {
-        "header": "So we hear you're having a party.",
+        "header": "Hire Us",
         "template": "website/hire_us.html",
         "content": None,
         "business_form": BusinessHireUsForm,
@@ -105,13 +105,13 @@ class HireUs(ContentPage, generic.TemplateView):
 
 class Apply(ContentPage, generic.TemplateView):
     extra_context = {
-        "header": "Ready to take trivia to the next level?",
+        "header": "Apply To Host",
         "template": "website/apply.html",
         "content": None}
 
 class Venues(ContentPage, generic.ListView):
     extra_context = {
-        "header": "So many places to play, not enough time",
+        "header": "Where To Play",
         "template": "website/venues.html",
         "today": date.today}
 
@@ -152,7 +152,7 @@ class EventView(ContentPage, View):
 
 class Login(ContentPage, generic.TemplateView):
     extra_context = {
-        'header': "Stop! In the name of love",
+        'header': "Login",
         'template': "website/login.html",
         'content': None,
         'form': LoginForm}
