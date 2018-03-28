@@ -19,6 +19,6 @@ from django.urls    import include, path
 app_name = 'triviatimelive'
 urlpatterns = [
     path('triviatimelive/admin/', admin.site.urls),
-    path('triviatimelize/triviapalooza/', include('palooza.urls')),
+    path('triviatimelive/triviapalooza/', include('palooza.urls')),
     path('triviatimelive/', include('website.urls')),
 ]
