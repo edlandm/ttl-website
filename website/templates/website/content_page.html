@@ -1,6 +1,7 @@
 {% load static %}
 
 <meta name=viewport content='width=device-width, initial-scale=1'>
+<title>{% if header %}TTL - {{header}}{% else %}Trivia Time Live{% endif %}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
 <script src="{% static 'website/util.js' %}"></script>
