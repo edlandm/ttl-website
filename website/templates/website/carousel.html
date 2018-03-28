@@ -19,6 +19,7 @@
     .carousel-activator:nth-of-type({{forloop.counter}}):checked ~
     .carousel-track .carousel-slide:nth-of-type({{forloop.counter}}){
         opacity: 1;
+        pointer-events: auto;
     }
     .carousel-activator:nth-of-type({{forloop.counter}}):checked ~
     .carousel-controls:nth-of-type({{forloop.counter}}) {
@@ -104,6 +105,7 @@
         right: 0;
         text-align: center;
         transition: opacity linear .5s;
+        pointer-events: none;
     }
 
     .carousel-slide h2 {
