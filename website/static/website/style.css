@@ -26,11 +26,11 @@
 }
 @font-face {
     font-family: rockwell;
-    src: url(rockwell.ttf);
+    src: url(rockwell.woff);
 }
 @font-face {
     font-family: rockwell-condensed;
-    src: url(RockwellStd.otf);
+    src: url(RockwellStd.woff);
 }
 body {
     background-color: var(--main-bg-color);
