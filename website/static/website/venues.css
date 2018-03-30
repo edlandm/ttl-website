@@ -145,3 +145,12 @@
         /*padding-top: 45px;*/
     /*}*/
 }
+@media screen\0, @media screen\9 {
+    /* IE specific rules because it sucks that bad */
+    .day {
+        background-color: #0D5060;
+    }
+    .day.today {
+        color: #337989;
+    }
+}

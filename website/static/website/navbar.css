@@ -47,3 +47,25 @@
 .dropdown .content.active {
     display: block;
 }
+
+@media screen\0, @media screen\9 {
+    /* IE specific rules because it sucks that bad */
+    #navbar {
+        background-color: #0D5060;
+    }
+    .dropdown, #navbar>a {
+        background-color: #0D5060;
+    }
+    .dropdown>button, #navbar>a {
+        background-color: #0D5060;
+    }
+    .dropdown>button:hover,
+    .dropdown>button:focus,
+    #navbar>a:hover,
+    #navbar>a:focus {
+        background-color: #508F9E;
+    }
+    .dropdown .content {
+        background-color: #F1F1F1;
+    }
+}
