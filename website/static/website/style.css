@@ -123,3 +123,30 @@ p a:visited {
     }
 
 }
+@media screen\0, @media screen\9 {
+    /* IE specific rules because it sucks that bad */
+    body {
+        background-color: #337989;
+    }
+    h1, h2 {
+        color: #EBE585;
+    }
+    a {
+        border-bottom: #172969;
+    }
+    h1 a:hover, h2 a:hover, h3 a:hover {
+        border-bottom: 2px solid #FFFFAA;
+    }
+    p a:hover {
+        border-bottom: 2px solid #508F9E;
+    }
+    p a {
+        color: #F1F1F1;
+    }
+    #content {
+        background-color: #F1F1F1;
+    }
+    #content h1, #content h2, #content h3, #content h4 {
+        color: #337989;
+    }
+}
