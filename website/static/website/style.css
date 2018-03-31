@@ -123,7 +123,7 @@ p a:visited {
     }
 
 }
-@media screen\0, @media screen\9 {
+@media screen\0, screen\9 {
     /* IE specific rules because it sucks that bad */
     body {
         background-color: #337989;

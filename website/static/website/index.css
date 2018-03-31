@@ -96,7 +96,7 @@ li.pennant:before {
         margin-bottom: -.2em;
     }
 }
-@media screen\0, @media screen\9 {
+@media screen\0, screen\9 {
     /* IE specific rules because it sucks that bad */
     #daily-updates div {
         background: #0D5060;
