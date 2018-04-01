@@ -562,7 +562,7 @@ class FBPost(LoginRequiredMixin, View):
                             pennant_venues=pennant_venues)
                     ]
                 else: # no pennant games
-                    if len(venues == 2): # two games at different times
+                    if len(venues) == 2: # two games at different times
                         vnames = " or at ".join([self.format_location(v, time=True) for v in venues])
                     else: # more than two games at different times
                         last = list(venues)[-1]
