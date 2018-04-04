@@ -145,7 +145,7 @@ class EventView(ContentPage, View):
             event = None
             header = "Event Not Found"
 
-        bg_desktop_url, bg_mobily_url = (None, None)
+        bg_desktop_url, bg_mobile_url = (None, None)
         static_url = lambda x: x.replace('website/static/', '')
         if event.bg_desktop:
             bg_desktop_url = static_url(event.bg_desktop.url)
