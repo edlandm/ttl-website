@@ -3,3 +3,4 @@
 .cs_*
 *.pyc
 static/
+migrations/
