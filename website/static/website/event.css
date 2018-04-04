@@ -1,0 +1,98 @@
+#backdrop {
+    border: 2px solid black;
+}
+
+#backdrop h2 {
+    border-bottom: 2px solid black;
+    box-shadow: 0 9px 6px -6px black;
+    font-family: rockwell;
+    font-size: 80pt;
+    color: white !important;
+    background: #333;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: .5em;
+}
+
+#details {
+    background: white;
+    opacity: .75;
+    margin-top: 0;
+}
+
+#details a {
+    color: black;
+}
+
+#details>p::first-letter {
+    font-size: 18pt;
+}
+
+@media screen and (min-width: 500px) {
+    /* Desktop monitors, tablets, wide screens */
+    .main-centered {
+        margin-top: -1px;
+    }
+    #backdrop {
+        background-size: cover;
+        /*background-size: auto 100%;*/
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-evenly;
+        align-items: flex-start;
+    }
+    #backdrop h2 {
+        font-size: 80pt;
+        mix-blend-mode: multiply;
+        flex: 0;
+    }
+    #details {
+        align-self: center;
+        display: flex;
+        justify-content: flex-end;
+        align-items: baseline;
+
+        border: 2px solid black;
+        border-bottom: none;
+
+        width: 80%;
+        /*min-height: 275px;*/
+        opacity: .85;
+        margin-top: 0;
+        padding: 0 3em;
+    }
+    #details>* {
+        flex: 1;
+    }
+    #details *:first-child {
+        margin: 1em 0;
+        align-self: center;
+    }
+}
+@media screen and (max-width: 500px) {
+    /* Phones */
+    #backdrop {
+        background-size: 100% auto;
+        /*background-size: auto 100%;*/
+        /*background-size: cover;*/
+        background-position: center;
+        /*background-repeat: repeat-y;*/
+        background-repeat: none;
+        margin-top: -1px;
+    }
+    #backdrop h2 {
+        font-size: 32pt;
+        /*height: 2em;*/
+        line-height: 1em;
+        padding: 0.5em 0em;
+    }
+    #details {
+        padding: 2em 1em;
+        margin-top: -1em;
+        padding-bottom: 1em;
+    }
+}
+
+@media screen\0, screen\9 {
+    /* IE specific rules because it sucks that bad */
+}
