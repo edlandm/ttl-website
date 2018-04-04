@@ -144,11 +144,18 @@ class EventView(ContentPage, View):
         except Event.DoesNotExist:
             event = None
             header = "Event Not Found"
+
+        bg_desktop_url, bg_mobily_url = (None, None)
         static_url = lambda x: x.replace('website/static/', '')
+        if event.bg_desktop:
+            bg_desktop_url = static_url(event.bg_desktop.url)
+        if event.bg_mobile:
+            bg_mobile_url = static_url(event.bg_mobile.url)
+
         context = {
             "header": header,
-            "bg_desktop_url": static_url(event.bg_desktop.url),
-            "bg_mobile_url":  static_url(event.bg_mobile.url),
+            "bg_desktop_url": bg_desktop_url,
+            "bg_mobile_url": bg_mobile_url,
             "content": event}
 
         bg_color_info = self.get_bg_color_info(event)
