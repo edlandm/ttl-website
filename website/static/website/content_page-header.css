@@ -10,6 +10,7 @@
 }
 #header h1 {
     flex: 1;
+    font-size: 36pt;
 }
 #header #logo {
     flex: 1;
@@ -40,7 +41,7 @@
         flex-direction: column-reverse;
     }
     #header h1 {
-        font-size: 24pt;
+        font-size: 30pt;
     }
     #logo img {
         max-width: 100%;
