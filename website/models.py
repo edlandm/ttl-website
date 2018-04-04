@@ -239,6 +239,12 @@ class Event(models.Model):
     location     = models.TextField()
     description  = models.TextField()
     announcement = models.ForeignKey("Announcement", models.SET_NULL, blank=True, null=True)
+    bg_desktop   = models.ImageField(
+        upload_to="website/static/website/images/events/",
+        blank=True, null=True)
+    bg_mobile    = models.ImageField(
+        upload_to="website/static/website/images/events/",
+        blank=True, null=True)
 
     def __str__(self):
         datestring = "{date} {ord} ({time})".format(
