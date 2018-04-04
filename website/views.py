@@ -1,5 +1,6 @@
-from datetime import date, datetime, timezone, timedelta
-from random   import choice
+from datetime  import date, datetime, timezone, timedelta
+from PIL import Image
+from random    import choice
 import re
 
 from django.contrib.auth.models import User
@@ -8,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http      import HttpResponse, HttpResponseRedirect, Http404
 from django.utils     import dates
+from django.utils.text import slugify
 from django.views     import generic, View
 
 from .models          import Announcement, Clue, Event, Pennant, PennantDistrict, PennantStandings, Venue
@@ -133,22 +135,55 @@ class PennantStandings(ContentPage, generic.ListView):
 class EventView(ContentPage, View):
     model = Event
     extra_context = {
-        "template": "website/event.html"
+        "template": "website/event.html",
     }
-    def get(self, request, pk):
+    def get(self, request, id, slug):
         try:
-            event = self.model.objects.get(pk=pk)
-            header = event.title
+            event = self.model.objects.get(pk=id)
+            header = "Events: " + event.title
         except Event.DoesNotExist:
             event = None
             header = "Event Not Found"
-        self.extra_context.update({"header": header})
+
+        bg_desktop_url, bg_mobily_url = (None, None)
+        static_url = lambda x: x.replace('website/static/', '')
+        if event.bg_desktop:
+            bg_desktop_url = static_url(event.bg_desktop.url)
+        if event.bg_mobile:
+            bg_mobile_url = static_url(event.bg_mobile.url)
+
         context = {
             "header": header,
+            "bg_desktop_url": bg_desktop_url,
+            "bg_mobile_url": bg_mobile_url,
             "content": event}
+
+        bg_color_info = self.get_bg_color_info(event)
+
+        context.update(bg_color_info)
         context.update(self.extra_context)
         return render(request, self.template_name, context)
 
+    def color_distance(a, b):
+        """ Return the distance (closeness) of two colors """
+        return sqrt(abs((a[0] - b[0])^2 + (a[1] - b[1])^2 + (a[2] - b[2])^2))
+
+    def most_common_color(self, im_url):
+        """ Find the most common color in an image """
+        im = Image.open(im_url).resize((75, 75), Image.ANTIALIAS)
+        colors = im.getcolors(im.size[0] * im.size[1])
+        most_common = list(reversed(sorted(colors, key=lambda x: x[0])))[0]
+        return str(most_common[1])
+
+    def get_bg_color_info(self, event):
+        """ Return dict of most-common colors desktop and mobile backgrounds """
+        bg_desktop_color, bg_mobile_color = (None, None)
+        if event.bg_desktop:
+            bg_desktop_color = self.most_common_color(event.bg_desktop.url)
+        if event.bg_mobile:
+            bg_mobile_color = self.most_common_color(event.bg_mobile.url)
+        return { "bg_desktop_color": bg_desktop_color,
+                 "bg_mobile_color": bg_mobile_color }
 
 class Login(ContentPage, generic.TemplateView):
     extra_context = {

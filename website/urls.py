@@ -19,5 +19,5 @@ urlpatterns = [
     path('fbpost/<day>/', views.FBPost.as_view(), name='fbpost'),
     path('fbpost/<day>/raw', views.FBPost.as_view(), {'raw': True}, name='fbpost_raw'),
     path('fbpost/<day>/url', views.FBPost.as_view(), {'url': True}, name='fbpost_url'),
-    path('events/<int:pk>/', views.EventView.as_view(), name='event'),
+    path('events/<int:id>/<slug:slug>/', views.EventView.as_view(), name='event'),
 ]

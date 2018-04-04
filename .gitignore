@@ -2,4 +2,6 @@
 *.sqlite3
 .cs_*
 *.pyc
-static/
+./static/
+website/static/website/images/events/
+migrations/

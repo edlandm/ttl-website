@@ -2,6 +2,7 @@ from datetime import date, datetime, timezone, timedelta
 
 from django.db    import models
 from django.utils import dates, timezone
+from django.utils.text import slugify
 from django.urls  import reverse
 
 from .util            import ordinal
@@ -239,6 +240,12 @@ class Event(models.Model):
     location     = models.TextField()
     description  = models.TextField()
     announcement = models.ForeignKey("Announcement", models.SET_NULL, blank=True, null=True)
+    bg_desktop   = models.ImageField(
+        upload_to="website/static/website/images/events/",
+        blank=True, null=True)
+    bg_mobile    = models.ImageField(
+        upload_to="website/static/website/images/events/",
+        blank=True, null=True)
 
     def __str__(self):
         datestring = "{date} {ord} ({time})".format(
@@ -261,6 +268,7 @@ class Event(models.Model):
             annce.display_end   = self.time
         else:
             annce = self.announcement
+
         annce.title         = self.title
         # Saturday, May 4th (7:00pm)
         datestring = "{date} {ord} ({time})".format(
@@ -270,7 +278,9 @@ class Event(models.Model):
         annce.description   = "{date} at {location}. click here for more info".format(
             date=datestring,
             location=self.location.split('\n')[0])
-        annce.url = reverse('website:event', args=[self.pk]).replace('/triviatimelive/', '')[:-1]
+
+        super(Event, self).save(*args, **kwargs)
+        annce.url = reverse('website:event', args=[self.pk, slugify(self.title)]).replace('/triviatimelive/', '')[:-1]
         annce.save()
         self.announcement = annce
         super(Event, self).save(*args, **kwargs)

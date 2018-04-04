@@ -217,7 +217,7 @@
             <!--<div class="carousel-slide"-->
                 <!--style="background: linear-gradient(to right, rgba(4, 124, 123, 0), rgba(4, 124, 123, 1));">-->
             {% if a.url %}
-            <a href='{% if a.is_url_internal %}{% if "events" in a.url %}{% url "website:event" a.url|last %}{% else %}{% url a.url %}{% endif %}{% else %}{{a.url}}{% endif %}'>
+            <a href='{% if a.is_url_internal %}{% if "events" in a.url %}{{a.url}}{% else %}{% url a.url %}{% endif %}{% else %}{{a.url}}{% endif %}'>
             {% endif %}
                 <h2>{{a.title}}</h2><br>
                 <p>{{a.description}}</p>
