@@ -1,12 +1,36 @@
-<h2></h2>
-{% with content as event %}
+{% load static %}
+
+{% with event=content %}
+<style type="text/css">
+@media screen and (min-width: 500px) {
+    /* Desktop monitors, tablets, wide screens */
+    /* {% get_static_prefix %} */
+    #backdrop {
+        background: url("{% get_static_prefix %}{{bg_desktop_url}}") center no-repeat;
+    }
+}
+@media screen and (max-width: 500px) {
+    /* Phones */
+    #backdrop {
+        background: blue url("{% get_static_prefix %}{{bg_mobile_url}}") center no-repeat;
+        background-color: rgb{{bg_mobile_color}};
+    }
+}
+</style>
+<link rel="stylesheet" type="text/css" href="{% static 'website/event.css' %}" />
 <div class="main-centered">
-  <dl>
-    <dt>Where</dt>
-    <dd>{{event.location|linebreaksbr}}</dd>
-    <dt>When</dt>
-    <dd>{{event.time}}</dd>
-  </dl>
-  <p>{{event.description|linebreaksbr}}</p>
+    <div id="backdrop">
+        <h2>{{event.title}}</h2>
+        <div id="details">
+            <dl>
+                <dt>Where</dt>
+                <dd>{{event.location|linebreaks}}</dd>
+                <dt>When</dt>
+                <dd>{{event.time}}</dd>
+            </dl>
+            {{event.description|safe|linebreaks}}
+            <!--{% lorem 3 p %}-->
+        </div>
+    </div>
 </div>
 {% endwith %}
