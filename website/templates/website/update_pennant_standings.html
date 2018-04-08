@@ -182,7 +182,7 @@
 
             var tboxes = document.querySelectorAll('input[type=number]');
             forEach(tboxes, function(tbox) {
-                tbox.onkeyup = calculateTotal;
+                tbox.oninput = calculateTotal;
             });
 
             var form = document.forms[0];
