@@ -82,6 +82,17 @@ p a:visited {
 #content h1, #content h2, #content h3, #content h4 {
     color: var(--main-bg-color);
 }
+
+#content a {
+    color: black;
+    border-bottom: 2px solid var(--underline-color);
+    transition: all .2s;
+    text-decoration: none;
+}
+#content a:visited {
+    color: purple;
+}
+
 #content table, #content dl {
     color: #000;
     margin: auto;
