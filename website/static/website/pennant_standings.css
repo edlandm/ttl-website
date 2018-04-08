@@ -33,7 +33,9 @@ table.sortable th {
     font-weight: bold;
     cursor: default;
 }
+
 @media screen and (max-width: 500px) {
+    /* Mobile */
     table.sortable td {
         font-size: 14pt;
     }
@@ -48,5 +50,11 @@ table.sortable th {
     }
     thead th, tr td {
         border-right: 1px solid black;
+    }
+}
+@media screen and (min-width: 500px) {
+    /* Desktop */
+    table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+        content: " \25B4\25BE";
     }
 }
