@@ -31,7 +31,7 @@ table.sortable th {
     background-color: #999;
     color: #000;
     font-weight: bold;
-    cursor: default;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 500px) {
