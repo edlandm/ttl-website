@@ -241,10 +241,10 @@ class Event(models.Model):
     description  = models.TextField()
     announcement = models.ForeignKey("Announcement", models.SET_NULL, blank=True, null=True)
     bg_desktop   = models.ImageField(
-        upload_to="website/static/website/images/events/",
+        upload_to="webapps/triviatimelive/ttl-website/static/website/images/events/",
         blank=True, null=True)
     bg_mobile    = models.ImageField(
-        upload_to="website/static/website/images/events/",
+        upload_to="webapps/triviatimelive/ttl-website/static/website/images/events/",
         blank=True, null=True)
 
     def __str__(self):

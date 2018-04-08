@@ -7,7 +7,7 @@
     /* {% get_static_prefix %} */
     #backdrop {
         {% if bg_desktop_url %}
-        background: url("{% get_static_prefix %}{{bg_desktop_url}}") center no-repeat;
+        background: url("{% static bg_desktop_url %}") center no-repeat;
         background-color: rgb{{bg_desktop_color}};
         {% else%}
         background-color: var(--main-bg-color);
@@ -18,7 +18,7 @@
     /* Phones */
     #backdrop {
         {% if bg_mobile_url %}
-        background: url("{% get_static_prefix %}{{bg_mobile_url}}") center no-repeat;
+        background: url("{% static bg_mobile_url %}") center no-repeat;
         background-color: rgb{{bg_mobile_color}};
         {% else%}
         background-color: var(--main-bg-color);
