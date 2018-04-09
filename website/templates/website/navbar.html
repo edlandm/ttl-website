@@ -3,16 +3,22 @@
 
 <div id="navbar">
     <div class="dropdown">
-      <button>About</button>
-      <div class="content">
-        <a href="{% url 'website:about' %}">Details</a>
-        <a href="{% url 'website:how_to_play' %}">How To Play / FAQ</a>
-      </div>
+        <button>About</button>
+        <div class="content">
+            <a href="{% url 'website:about' %}">Details</a>
+            <a href="{% url 'website:how_to_play' %}">How To Play / FAQ</a>
+        </div>
     </div>
-    <a href="{% url 'website:pennant_standings' %}">Pennant Standings</a>
     <a href="{% url 'website:venues' %}">Where To Play</a>
     <div class="dropdown">
-        <button style="text-transform: none">TriviaPalooza</button>
+        <button>Pennant</button>
+        <div class="content">
+            <a href="{% url 'website:pennant_about' %}">What <i>is</i> the pennant?</a>
+            <a href="{% url 'website:pennant_standings' %}">Standings</a>
+        </div>
+    </div>
+    <div class="dropdown">
+        <button>TriviaPalooza</button>
         <div class="content">
             <a href="{% url 'palooza:about' %}">What <i>is</i> TriviaPalooza?</a>
             <a href="{% url 'palooza:standings' %}">Standings</a>
