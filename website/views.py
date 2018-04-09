@@ -16,6 +16,8 @@ from .models          import Announcement, Clue, Event, Pennant, PennantDistrict
 from .forms           import BusinessHireUsForm, EventHireUsForm, LoginForm
 from .util            import ordinal
 
+LOGIN_URL = '/triviatimelive/login/'
+
 class Index(View):
     template_name = "website/index.html"
 
@@ -223,7 +225,7 @@ class Logout(View):
         return redirect('/triviatimelive/')
 
 class MovePennant(LoginRequiredMixin, View):
-    login_url = "/triviatimelive/login/"
+    login_url = LOGIN_URL
     redirect_field_name = "redirect_to"
     template_name = "website/move_pennant.html"
 
@@ -280,7 +282,7 @@ class MovePennant(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 class UpdatePennantStandings(LoginRequiredMixin, ContentPage, generic.TemplateView):
-    login_url = "/triviatimelive/login/"
+    login_url = LOGIN_URL
     redirect_field_name = "redirect_to"
     template_name = "website/update_pennant_standings.html"
 
@@ -331,7 +333,7 @@ class UpdatePennantStandings(LoginRequiredMixin, ContentPage, generic.TemplateVi
 class FBPost(LoginRequiredMixin, View):
     """ Returns a string to be copied into a FB post """
     template_name = "website/fbpost.html"
-    login_url = "/triviatimelive/login/"
+    login_url = LOGIN_URL
     redirect_field_name = "redirect_to"
 
     positive_adjectives = [
