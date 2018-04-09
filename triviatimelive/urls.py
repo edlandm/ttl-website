@@ -20,7 +20,7 @@ from django.urls    import include, path
 
 app_name = 'triviatimelive'
 urlpatterns = [
-    path('triviatimelive/admin/', admin.site.urls),
-    path('triviatimelive/triviapalooza/', include('palooza.urls')),
-    path('triviatimelive/', include('website.urls')),
+    path('', include('website.urls')),
+    path('admin/', admin.site.urls),
+    path('triviapalooza/', include('palooza.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
