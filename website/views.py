@@ -121,6 +121,12 @@ class Venues(ContentPage, generic.ListView):
         """ Return all venues ordered by their days and then names """
         return  Venue.objects.order_by("day", "name")
 
+class PennantAbout(ContentPage, generic.TemplateView):
+    extra_context = {
+        "header": "What Is The Pennant?",
+        "template": "website/pennant_about.html",
+        "content": None}
+
 class PennantStandings(ContentPage, generic.ListView):
     extra_context = {
         "header": "Pennant Standings",
