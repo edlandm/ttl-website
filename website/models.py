@@ -230,10 +230,6 @@ class Hold(models.Model):
             start=start,
             end=end)
 
-# TODO: Make an Event model for special events (like Star Wars Trivia).
-# These events are shown in the Index view for Todays games, and also there is
-# an Announcement that will be made for them upon creation
-
 class Event(models.Model):
     title        = models.CharField(max_length=100)
     time         = models.DateTimeField()
