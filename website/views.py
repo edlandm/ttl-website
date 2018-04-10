@@ -362,7 +362,7 @@ class FBPost(LoginRequiredMixin, View):
                 'clue': {'date': date.today(), 'title': "No Clue Yet"},
                 'string': "We don't have a clue for this day yet."})
         venues = list(filter(
-            lambda x: not x.active_hold(),
+            lambda x: not x.active_hold() or day > x.hold.end,
             Venue.objects.filter(day=day.weekday()).order_by("time", "name")))
         string = self.generate_string(clue, day, venues)
         if raw:
