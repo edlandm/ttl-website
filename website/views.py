@@ -16,7 +16,7 @@ from .models          import Announcement, Clue, Event, Pennant, PennantDistrict
 from .forms           import BusinessHireUsForm, EventHireUsForm, LoginForm
 from .util            import ordinal
 
-LOGIN_URL = '/triviatimelive/login/'
+LOGIN_URL = '/login/'
 
 class Index(View):
     template_name = "website/index.html"
