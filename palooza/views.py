@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views  import generic, View
 
 from website.views import ContentPage
-from .models import Player
+from .models import Player, CheckIn, VenueDiscount
 
 class Standings(ContentPage, generic.ListView):
     extra_context = {
@@ -16,11 +16,15 @@ class Standings(ContentPage, generic.ListView):
         players = Player.objects.filter(date_added__year=this_year)
         return sorted(players, key=lambda p: -p.points())
 
-class VenueDiscounts(ContentPage, generic.TemplateView):
+class VenueDiscounts(ContentPage, generic.ListView):
     extra_context = {
         "header": "Venue Discounts",
-        "template": "palooza/venue_discounts.html",
-        "content": None}
+        "template": "palooza/venue_discounts.html"}
+
+    def get_queryset(self):
+        """ Return all VenueDiscounts """
+        discounts = VenueDiscount.objects.all()
+        return sorted(discounts, key=lambda d: d.venue.name)
 
 class About(ContentPage, generic.TemplateView):
     extra_context = {

@@ -16,19 +16,12 @@
 </style>
 
 <table>
+    {% for discounts in content %}
     <tr>
-        <td>The Brass Kraken</td>
-        <td>.50 cents off beer every day (limit 3)<br>
-            $1.00 off beer during trivia (no limit)</td>
+        <td>{{discounts.venue}}</td>
+        <td>{{discounts.discount|linebreaksbr}}</td>
     </tr>
-    <tr>
-        <td>The Golden Mum</td>
-        <td>Happy Hour prices during trivia</td>
-    </tr>
-    <tr>
-        <td>Dog Days Brewing</td>
-        <td>$1 off pints during trivia</td>
-    </tr>
+    {% endfor %}
 </table>
 
 <p><b>Check back often because we're adding new deals every day!</b></p>
