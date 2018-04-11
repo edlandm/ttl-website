@@ -65,12 +65,18 @@ class Index(View):
                 day = "Today"
             else:
                 day = game.strftime('%A, %B ') + ordinal(game.day)
-            description = '{day} at {venue} {prep} {city} at {time}'.format(
-                day=day,
-                venue=venue.name,
-                prep=preposition,
-                city=venue.city(),
-                time=venue.time.strftime('%l:%M%P'))
+            if venue.city().lower() in venue.name.lower():
+                description = '{day} at {venue} at {time}'.format(
+                    day=day,
+                    venue=venue.name,
+                    time=venue.time.strftime('%l:%M%P'))
+            else:
+                description = '{day} at {venue} {prep} {city} at {time}'.format(
+                    day=day,
+                    venue=venue.name,
+                    prep=preposition,
+                    city=venue.city(),
+                    time=venue.time.strftime('%l:%M%P'))
             announcement = {
                     'title': 'Next %s Game' % pennant,
                     'description': description}
