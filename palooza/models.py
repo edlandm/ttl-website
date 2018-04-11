@@ -7,8 +7,9 @@ from website.views import Venue
 
 class Player(models.Model):
     """ A Player for Trivia Palooza """
-    pid  = models.IntegerField()
-    name = models.CharField(max_length=200)
+    pid  =  models.IntegerField()
+    name =  models.CharField(max_length=200)
+    phone = models.CharField(max_length=15, blank=True, null=True)
     date_added = models.DateField(auto_now_add=True, blank=True)
 
     def __str__(self):
@@ -29,7 +30,6 @@ class Player(models.Model):
         multiplier = 1 + math.floor(unique_venues / 3)
         points = total_games * multiplier
         return points
-
 
 class CheckIn(models.Model):
     """ A CheckIn is created every time a player checks-in at a venue with
