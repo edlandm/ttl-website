@@ -46,3 +46,6 @@ class VenueDiscount(models.Model):
     """ Special perks/discounts offered to TP players """
     venue = models.ForeignKey(Venue, models.PROTECT)
     discount   = models.TextField(max_length=250)
+
+    def __str__(self):
+        return self.venue.name + " TP-discounts"
