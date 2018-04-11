@@ -142,9 +142,12 @@ class PennantStandings(ContentPage, generic.ListView):
 
     def get_queryset(self):
         """ Return all active venues """
-        return Venue.objects.exclude(
-                pennant_district=None
-            ).order_by("pennant_district", "name")
+        venues = Venue.objects.exclude(pennant_district=None)
+        return list(sorted(venues,
+            key=lambda v: (v.pennant_district.name,
+                           -v.pennantstandings.total_points(),
+                           v.name)))
+
 
 class EventView(ContentPage, View):
     model = Event
