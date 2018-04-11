@@ -154,12 +154,11 @@ class EventView(ContentPage, View):
             header = "Event Not Found"
 
         bg_desktop_url, bg_mobile_url = (None, None)
-        static_url = lambda x: x.replace('website/static/', '')
+        static_url = lambda x: x.replace('webapps/triviatimelive/ttl-website/static/', '')
         if event.bg_desktop:
             bg_desktop_url = static_url(event.bg_desktop.url)
         if event.bg_mobile:
             bg_mobile_url = static_url(event.bg_mobile.url)
-
         context = {
             "header": header,
             "bg_desktop_url": bg_desktop_url,
