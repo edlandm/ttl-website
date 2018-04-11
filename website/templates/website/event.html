@@ -25,6 +25,22 @@
         {% endif %}
     }
 }
+@media screen\0, screen\9 and (min-width: 500px){
+    /* IE specific rules because it sucks that bad */
+    {% if not bg_desktop_url %}
+    #backdrop {
+        background-color: #337989;
+    }
+    {% endif %}
+}
+@media screen\0, screen\9 and (max-width: 500px){
+    /* IE specific rules because it sucks that bad */
+    {% if not bg_mobile_url %}
+    #backdrop {
+        background-color: #337989;
+    }
+    {% endif %}
+}
 </style>
 <link rel="stylesheet" type="text/css" href="{% static 'website/event.css' %}" />
 <div class="main-centered">
