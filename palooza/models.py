@@ -41,3 +41,8 @@ class CheckIn(models.Model):
 
     def __str__(self):
         return "%s at %s on %s" % (self.player, self.venue, self.date)
+
+class VenueDiscount(models.Model):
+    """ Special perks/discounts offered to TP players """
+    venue = models.ForeignKey(Venue, models.PROTECT)
+    discount   = models.TextField(max_length=250)
