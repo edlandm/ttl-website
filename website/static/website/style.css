@@ -161,6 +161,9 @@ p a:visited {
     #content {
         background-color: #F1F1F1;
     }
+    #content a {
+        color: #0D5060;
+    }
     #content h1, #content h2, #content h3, #content h4 {
         color: #337989;
     }
