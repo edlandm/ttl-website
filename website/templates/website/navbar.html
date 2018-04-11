@@ -38,9 +38,11 @@
     function dropdownClick() {
         // Toggle the visibility of the dropdown content in the navbar
         var button  = this,
-            content = button.nextElementSibling;
-        // toggleClass is a utility function that can be found in
-        // {% static 'website/util.js' %}
+            content = button.nextElementSibling,
+            dropdowns = Array.prototype.filter.call(
+                document.querySelectorAll('.content.active'),
+                function(d) { return d !== content; });
+        forEach(dropdowns, function(d) { d.classList.remove('active'); })
         toggleClass(content, 'active');
     };
 
@@ -52,9 +54,8 @@
     // close dropdown if user clicks outside of it
     window.onclick = function(e) {
         if(!e.target.matches('.dropdown>button')) {
-        var dropdown = document.querySelector('.content.active');
-        if(dropdown)
-            dropdown.classList.remove('active');
+            var dropdowns = document.querySelectorAll('.content.active');
+            forEach(dropdowns, function(d) { d.classList.remove('active'); })
         }
     }
 </script>
