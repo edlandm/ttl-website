@@ -13,6 +13,8 @@
 }
 #logo img {
     margin: auto;
+    height: auto;
+    width: 100%;
 }
 #logo {
     text-align: center;
@@ -73,6 +75,9 @@ li.pennant {
     /* Desktop monitors, tablets, wide screens */
     #header {
         font-size: 18pt;
+    }
+    #header img {
+        height: 6em;
     }
     #games ul {
         padding-left: 15%;
