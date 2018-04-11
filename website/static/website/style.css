@@ -4,7 +4,8 @@
 :root {
     --main-bg-color:   #337989;
     --second-bg-color: #0D5060;
-    --main-fg-color:   #EBE585;
+    /*--main-fg-color:   #EBE585;*/
+    --main-fg-color:   #CFE64A;
     --content-color:   #F1F1F1;
 
     /*Navbar*/
@@ -81,7 +82,7 @@ p a:visited {
 
 #content h1, #content h2, #content h3, #content h4,
 #content h1 a, #content h2 a, #content h3 a, #content h4 a {
-    color: var(--main-bg-color);
+    color: var(--second-bg-color);
 }
 
 #content a {
