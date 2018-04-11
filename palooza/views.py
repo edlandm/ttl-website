@@ -16,6 +16,12 @@ class Standings(ContentPage, generic.ListView):
         players = Player.objects.filter(date_added__year=this_year)
         return sorted(players, key=lambda p: -p.points())
 
+class VenueDiscounts(ContentPage, generic.TemplateView):
+    extra_context = {
+        "header": "Venue Discounts",
+        "template": "palooza/venue_discounts.html",
+        "content": None}
+
 class About(ContentPage, generic.TemplateView):
     extra_context = {
         "header": "What is Trivia Palooza?",
