@@ -69,8 +69,6 @@ p a:visited {
 }
 
 #content {
-    /*background-color: #FFF;*/
-    /*background-color: #CCC;*/
     background-color: var(--content-color);
     opacity: .9;
     color: black;
@@ -80,13 +78,8 @@ p a:visited {
     padding-bottom: 1em;
 }
 
-#content h1, #content h2, #content h3, #content h4,
-#content h1 a, #content h2 a, #content h3 a, #content h4 a {
-    color: var(--second-bg-color);
-}
-
 #content a {
-    color: black;
+    color: var(--second-bg-color);
     border-bottom: 2px solid var(--underline-color);
     transition: all .2s;
     text-decoration: none;
@@ -96,6 +89,11 @@ p a:visited {
 }
 #content a:hover {
     border-bottom: 2px solid var(--underline-hover-color);
+}
+
+#content h1, #content h2, #content h3, #content h4,
+#content h1 a, #content h2 a, #content h3 a, #content h4 a {
+    color: var(--second-bg-color);
 }
 
 #content table, #content dl {
