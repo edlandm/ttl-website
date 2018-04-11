@@ -1,5 +1,9 @@
 #header {
+    background-color: rgba(255, 255, 255, .9);
     margin: auto;
+    margin-top: -2em;
+    padding-top: 2em;
+    margin-bottom: -.3em;
     font-size: 16pt;
 }
 #header h1 {
@@ -7,12 +11,12 @@
     margin: auto;
     margin-bottom: 0px;
 }
+#logo img {
+    margin: auto;
+}
 #logo {
     text-align: center;
-}
-#logo img {
     width: 100%;
-    height: auto;
 }
 #index-navbar-container #navbar {
     margin-top: 0.5em;
@@ -37,12 +41,11 @@
 li.pennant {
     color: var(--main-fg-color);
 }
-li.pennant:before {
-    content: "** ";
-    font-weight: bold;
-}
 @media screen and (max-width: 500px) {
     /* Phones and devices with small/narrow screens */
+    #logo img {
+        width: 100%;
+    }
     #daily-updates {
         width: 100%;
         display: block;
@@ -68,10 +71,6 @@ li.pennant:before {
 }
 @media screen and (min-width: 500px) {
     /* Desktop monitors, tablets, wide screens */
-    #logo {
-        width: 25%;
-        margin: auto;
-    }
     #header {
         font-size: 18pt;
     }
@@ -94,6 +93,10 @@ li.pennant:before {
     }
     #daily-updates h2 {
         margin-bottom: -.2em;
+    }
+    li.pennant:before {
+        content: "** ";
+        font-weight: bold;
     }
 }
 @media screen\0, screen\9 {

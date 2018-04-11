@@ -9,7 +9,15 @@
         <script src="{% static 'website/util.js' %}"></script>
     </head>
     <body>
-        {% include "website/logo_and_header.html" with header=""%}
+        <div id="header">
+            <h1>{{ header }}</h1>
+            <div id="logo">
+                <a href="{% url 'website:index' %}">
+                    <img src="{% static 'website/images/logos/TTL-logo.svg' %}" alt="Trivia Time Live Logo"
+                        height="150px">
+                </a>
+            </div>
+        </div>
 
         <div id="index-navbar-container">
         {% include "website/navbar.html" %}

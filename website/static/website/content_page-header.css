@@ -28,7 +28,7 @@
     #header #logo {
         flex: 1;
     }
-    #logo img {
+    #logo {
         max-width: 300px;
     }
 }
@@ -41,6 +41,7 @@
         flex-direction: column-reverse;
     }
     #header h1 {
+        margin-top: .4em;
         font-size: 30pt;
     }
     #logo img {
@@ -54,7 +55,7 @@
         flex-direction: row-reverse;
         height: 60px;
         position: relative;
-        margin-bottom: 20px;
+        margin-bottom: 0.8em;
     }
     #header h1 {
         text-align: center;
