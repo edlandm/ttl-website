@@ -25,7 +25,8 @@ SECRET_KEY = '-j)7db3h968d3=5+_pl+2o@5rb=2jdcu*j96hb1y6rn!gg$5cu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['ttl.webfactional.com']
+ALLOWED_HOSTS = ['triviatimelive.com',
+                 'ttl.webfactional.com']
 
 LOGGING = {
     'version': 1,
