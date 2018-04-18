@@ -504,6 +504,8 @@ class FBPost(LoginRequiredMixin, View):
     def get_venues_and_times(self, venues, pennant_venues):
         """ return string of venues/locations and their times """
         string = ""
+        nums = { 1: 'one', 2: 'two',   3: 'three', 4: 'four', 5: 'five',
+                 6: 'six', 7: 'seven', 8: 'eight', 9: 'nine'}
         # filter out the venues that have pennant games
         venues = [ v for v in venues if v not in pennant_venues ]
         if not venues and len(pennant_venues) > 1: # multiple games and all are pennant games
@@ -523,7 +525,7 @@ class FBPost(LoginRequiredMixin, View):
                     "".join(["Play tonight and {venues}. {num} exciting games tonight ",
                             "and they {quant} start at {time}."]).format(
                         venues=vnames,
-                        num=str(len(venues)).title(),
+                        num=nums[len(venues)].title(),
                         quant=quantifier,
                         time=formatted_time),
                 ]
@@ -596,7 +598,7 @@ class FBPost(LoginRequiredMixin, View):
                     venues_times_patterns = [
                         "".join(["Here are your {num} {adj} options for playing tonight: ",
                                 "{venues}, and {quant} of them start at {time}."]).format(
-                            num=len(venues),
+                            num=nums[len(venues)],
                             adj=choice(self.positive_adjectives),
                             venues=vnames,
                             quant=quantifier,
@@ -604,7 +606,7 @@ class FBPost(LoginRequiredMixin, View):
                         "".join(["Play tonight at {venues}. {num} {adj} options tonight ",
                                 "and they {quant} start at {time}."]).format(
                             venues=vnames,
-                            num=str(len(venues)).title(),
+                            num=nums[len(venues)].title(),
                             adj=choice(self.positive_adjectives),
                             quant=quantifier,
                             time=formatted_time),
