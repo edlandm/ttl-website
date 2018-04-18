@@ -8,7 +8,10 @@ from .models import Player, CheckIn, VenueDiscount
 class Standings(ContentPage, generic.ListView):
     extra_context = {
         "header": "Trivia Palooza Standings",
-        "template": "palooza/standings.html"}
+        "template": "palooza/standings.html",
+        "meta_tags": [
+            {"name": "robots",
+             "content": "noindex, nofollow"}]}
 
     def get_queryset(self):
         """ Return all players in the current year """
@@ -19,7 +22,10 @@ class Standings(ContentPage, generic.ListView):
 class VenueDiscounts(ContentPage, generic.ListView):
     extra_context = {
         "header": "Venue Discounts",
-        "template": "palooza/venue_discounts.html"}
+        "template": "palooza/venue_discounts.html",
+        "meta_tags": [
+            {"name": "robots",
+             "content": "noindex, nofollow"}]}
 
     def get_queryset(self):
         """ Return all VenueDiscounts """
@@ -30,4 +36,8 @@ class About(ContentPage, generic.TemplateView):
     extra_context = {
         "header": "What is Trivia Palooza?",
         "template": "palooza/about.html",
-        "content": None}
+        "content": None,
+        "meta_tags": [
+            {"name": "description",
+             "content": "TriviaPalooza is our Trivia Time Live player’s club! \
+             Earn points & prizes, and help benefit Stand Up For Kids"}]}

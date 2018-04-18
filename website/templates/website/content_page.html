@@ -1,6 +1,11 @@
 {% load static %}
 
 <meta name=viewport content='width=device-width, initial-scale=1'>
+{% if meta_tags %}
+    {% for meta in meta_tags %}
+<meta name='{{meta.name}}'content='{{meta.content}}'>
+    {% endfor %}
+{% endif %}
 <title>{% if header %}TTL - {{header}}{% else %}Trivia Time Live{% endif %}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
