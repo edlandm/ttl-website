@@ -131,8 +131,6 @@ p a:visited {
     #content {
         width: 80%;
     }
-    #content table {
-    }
     #navbar-container {
         width: 80%;
     }
@@ -144,7 +142,7 @@ p a:visited {
         background-color: #337989;
     }
     h1, h2 {
-        color: #EBE585;
+        color: #CFE64A;
     }
     a {
         border-bottom: #172969;
