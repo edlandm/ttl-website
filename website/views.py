@@ -91,7 +91,11 @@ class About(ContentPage, generic.TemplateView):
     extra_context = {
         "header": "About Us",
         "template": "website/about.html",
-        "content": None}
+        "content": None,
+        "meta_tags": [
+            {"name": "description",
+             "content": "The Pacific Northwest’s unrivaled live trivia \
+             experience! Play for free and win prizes!"}]}
 
 class HowToPlay(ContentPage, generic.TemplateView):
     extra_context = {
@@ -111,19 +115,28 @@ class HireUs(ContentPage, generic.TemplateView):
         "template": "website/hire_us.html",
         "content": None,
         "business_form": BusinessHireUsForm,
-        "event_form": EventHireUsForm}
+        "event_form": EventHireUsForm,
+        "meta_tags": [
+            {"name": "robots",
+             "content": "noindex, nofollow"}]}
 
 class Apply(ContentPage, generic.TemplateView):
     extra_context = {
         "header": "Apply To Host",
         "template": "website/apply.html",
-        "content": None}
+        "content": None,
+        "meta_tags": [
+            {"name": "robots",
+             "content": "noindex, nofollow"}]}
 
 class Venues(ContentPage, generic.ListView):
     extra_context = {
         "header": "Where To Play",
         "template": "website/venues.html",
-        "today": date.today}
+        "today": date.today,
+        "meta_tags": [
+            {"name": "robots",
+             "content": "noindex, nofollow"}]}
 
     def get_queryset(self):
         """ Return all venues ordered by their days and then names """
@@ -147,7 +160,6 @@ class PennantStandings(ContentPage, generic.ListView):
             key=lambda v: (v.pennant_district.name,
                            -v.pennantstandings.total_points(),
                            v.name)))
-
 
 class EventView(ContentPage, View):
     model = Event
@@ -207,7 +219,10 @@ class Login(ContentPage, generic.TemplateView):
         'header': "Login",
         'template': "website/login.html",
         'content': None,
-        'form': LoginForm}
+        'form': LoginForm,
+        "meta_tags": [
+            {"name": "robots",
+             "content": "noindex, nofollow"}]}
 
     def post(self, request):
         """ Authenticate user; if valid login, redirect to requested page else
