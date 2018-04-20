@@ -13,7 +13,7 @@ class Player(models.Model):
     date_added = models.DateField(auto_now_add=True, blank=True)
 
     def __str__(self):
-        return "%s-%s: %s" % (self.date_added.year, str(self.pid).zfill(3), self.name)
+        return "%s (%s): %s" % (str(self.pid).zfill(3), self.date_added.year, self.name)
 
     def padded_id(self):
         return str(self.pid).zfill(3)
