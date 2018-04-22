@@ -547,9 +547,9 @@ class FBPost(LoginRequiredMixin, View):
                 if pennant_venues: # if pennant game(s) tonight
                     if all(len(x) == 1 for x in [venues, pennant_venues]): # one pennant, one regular
                         vnames = "{venue}, or {phrase} at {pennant_venue}".format(
-                            venue=venues[0],
+                            venue=self.format_location(venues[0]),
                             phrase=self.get_pennant_phrase(pennant_venues[0]),
-                            pennant_venue=pennant_venues[0])
+                            pennant_venue=self.format_location(pennant_venues[0]))
                         quant = "both"
                     else: # more than two games, at least one is a pennant
                         vnames = "{venues}{pennant_venues}".format(
