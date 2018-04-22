@@ -21,15 +21,15 @@ class BusinessContactForm(forms.Form):
     business_name    = CapitalizedField()
     business_phone   = forms.CharField()
 
-    client_name     = CapitalizedField(label="Your name")
-    client_phone    = forms.CharField(label="Your phone")
-    client_email    = forms.EmailField(label="Your email")
+    client_name     = CapitalizedField(label="Contact name")
+    client_phone    = forms.CharField(label="Phone")
+    client_email    = forms.EmailField(label="Email")
 
     business_type = forms.ChoiceField(
         choices=(
             ('restaurant/bar', 'Restaurant/Bar (serves food)'),
             ('taproom',        'Taproom (beer only)'),
-            ('bar only',       'Bar only (drinks, but no food)'),
+            ('bar',       'Bar (drinks, but no food)'),
             ('other',          'Other')))
     business_type_other = forms.CharField(
             label="If other, please describe it.",
@@ -50,7 +50,7 @@ class EventContactForm(forms.Form):
 
 class ContactTimeForm(forms.Form):
     contact_method = forms.ChoiceField(
-        label="What's the best way to get ahold of you?",
+        label="What's the best way to contact you?",
         choices=[
             ('email', 'Email'),
             ('phone', 'Phone')])
@@ -67,7 +67,7 @@ class SurveyHireUsForm(forms.Form):
         label="If other, please explain",
         required=False)
     survey_questions = forms.CharField(widget=forms.Textarea,
-        label="Do you have any questions or comments for us?",
+        label="Do you have any questions for us before we contact you?",
         required=False)
 
 class BusinessHireUsForm(SurveyHireUsForm, ContactTimeForm, BusinessContactForm):
