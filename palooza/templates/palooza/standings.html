@@ -4,17 +4,15 @@
 
 <style id="filter-style">
     .hidden { display: none; }
-    tr:not(.hidden) {
-        border-bottom: 1px solid red;
-    }
 </style>
 
-<h2>STANDINGS</h2>
+<h2>{{years.0}}-{{years.1}} STANDINGS</h2>
 <div id="filter-container">
-    <input type="textbox" id="filter" placeholder="Search by Name or Number">
+    <input type="text" id="filter" placeholder="Search by Name or Playe#" autofocus>
 </div>
 <table id="standings" class="sortable">
     <thead>
+        <th>Place</th>
         <th>Player #</th>
         <th>Name</th>
         <th>Points</th>
@@ -22,11 +20,10 @@
     <tbody>
         {% for player in content %}
         {% with points=player.points %}
-        <tr id="standings-{{player.id}}" class="
-            {% if points >= 50 and points < 200 %}gold
-            {% elif points >= 200 and points < 500 %}platinum
-            {% elif points >= 500 %}daimond
-            {% endif %}">
+        <tr id="standings-{{player.pid}}">
+            <td class="{% if points >= 50 and points < 125 %}gold{% elif points >= 125 and points < 175 %}platinum{% elif points >= 175 %}diamond{% endif %}">
+                <div class="symbol"></div>{{player.rank}}
+            </td>
             <td>{{player.padded_id}}</td>
             <td>{{player.name}}</td>
             <td>{{points}}</td>
@@ -50,8 +47,8 @@
     standings = Array.prototype.map.call(
             document.getElementById('standings').querySelectorAll('tbody tr'),
             function(tr) {
-                var pid  = tr.children[0].innerText,
-                    name = tr.children[1].innerText;
+                var pid  = tr.children[1].innerText,
+                    name = tr.children[2].innerText;
                 return {id: tr.id, str: pid + ' ' + name};
             });
 
