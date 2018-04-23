@@ -1,3 +1,4 @@
+from itertools import groupby
 from datetime import date
 from django.shortcuts import render
 from django.views  import generic, View
@@ -15,9 +16,29 @@ class Standings(ContentPage, generic.ListView):
 
     def get_queryset(self):
         """ Return all players in the current year """
-        this_year = date.today().year
-        players = Player.objects.filter(date_added__year=this_year)
-        return sorted(players, key=lambda p: -p.points())
+        today = date.today()
+        self.extra_context["years"] = (today.year, today.year + 1)
+
+        players = Player.objects.filter(date_added__year=today.year)
+        player_dicts = [ p.to_dict() for p in players ]
+        return self.rank_players(player_dicts)
+
+    def rank_players(self, players):
+        """ returns a list of player dictionaries sorted by rank and then name
+            all player dictionaries are given a 'rank' value """
+        players_by_points = groupby(
+                sorted(players, key=lambda p: p['points'], reverse=True),
+                key=lambda p: p['points'])
+        new_players_list = []
+        rank = 1
+        for points, players in players_by_points:
+            players = sorted(players, key=lambda p: p['name'])
+            for player in players:
+                player['rank'] = rank
+                new_players_list.append(player)
+            rank += len(players)
+
+        return new_players_list
 
 class VenueDiscounts(ContentPage, generic.ListView):
     extra_context = {
