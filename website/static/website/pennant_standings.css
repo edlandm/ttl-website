@@ -36,13 +36,13 @@ table.sortable th {
 
 @media screen and (max-width: 500px) {
     /* Mobile */
-    table.sortable td {
+    td {
         font-size: 14pt;
     }
     tr td:first-child {
         text-align: left;
     }
-    table.sortable th:not(:first-of-type) {
+    th:not(:first-of-type) {
         text-align: right;
     }
     .mobile-hidden {

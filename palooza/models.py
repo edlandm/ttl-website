@@ -31,6 +31,20 @@ class Player(models.Model):
         points = total_games * multiplier
         return points
 
+    def to_dict(self):
+        """ converts self to dictionary
+            includes keys: [
+                pid, name, phone, points, checkins, padded_id ]
+            note: to save bandwidth, checkins is the method self.checkins, not the result of calling it
+        """
+        return {
+            'pid': self.pid,
+            'name': self.name,
+            'phone': self.phone,
+            'points': self.points(),
+            'checkins': self.checkins,
+            'padded_id': self.padded_id()}
+
 class CheckIn(models.Model):
     """ A CheckIn is created every time a player checks-in at a venue with
         their Trivia Palooza pass """

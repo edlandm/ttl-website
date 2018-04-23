@@ -1,53 +1,110 @@
 th, td {
     font-size: 16pt;
 }
+tr {
+    position: relative;
+}
 td {
     height: 2em;
 }
-tr.gold td {
-    background: gold;
+tr td:first-child {
+    text-align: right;
 }
-tr.gold td:first-child {
-    background: linear-gradient(to top left, gold 85%, black 100%);
+td:nth-child(2) {
+    width: 10%;
 }
-tr.gold td:last-child {
-    background: linear-gradient(to bottom right, gold 85%, black 100%);
+td:nth-child(-n+2) {
+    padding-right: .5em;
 }
-tr.platinum td,
-tr.diamond td {
-    background: #EEE;
+.diamond {
+    background: linear-gradient(to bottom left, #FFF, #999);
 }
-tr.platinum td:first-child,
-tr.diamond td:first-child {
-    background: linear-gradient(to top left, #EEE 75%, #666 100%);
+.diamond .symbol {
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+    border-width: 0 5px 5px 5px;
+    height: 0;
+    width: 10px;
+    position: absolute;
+    margin: .1em 0 10px .5em;
 }
-tr.platinum td:last-child,
-tr.diamond td:last-child {
-    background: linear-gradient(to bottom right, #EEE 75%, #666 100%);
+.diamond .symbol:after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: -5px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    border-width: 14px 10px 0 10px;
 }
-tr.diamond td:first-child::before, tr.diamond td:first-child::after {
-    content: " ♦ ";
+.platinum {
+    background: radial-gradient(white, #222);
+}
+.gold {
+    background: radial-gradient(gold, #330);
 }
 #filter-container {
     position: relative;
-    width: 90%;
-    margin-bottom: 2.6em;
 }
 #filter-container input {
     position: absolute;
     right: 0;
 }
+@media screen and (max-width: 350px) {
+    /* really narrow screens */
+    th {
+        font-size: 12pt;
+    }
+    td {
+        font-size: 12pt;
+    }
+}
 @media screen and (max-width: 500px) {
+    /* Phones */
     th {
         text-align: center;
     }
     #filter-container {
         width: 100%;
+        margin-bottom: 3.4em;
     }
     #filter-container * {
         position: relative;
     }
     input {
         width: 100%;
+    }
+    td:nth-child(-n+2) {
+        text-align: right;
+    }
+    tbody tr {
+        height: 2em;
+    }
+    tbody tr td:nth-child(3), th:nth-child(3) {
+        width: 60%;
+        text-align: center;
+    }
+    #standings th {
+        text-align: center;
+    }
+    input[type=text] {
+        height: 3em;
+    }
+}
+@media screen and (min-width: 500px) {
+    /* Desktop */
+    td:nth-child(2) {
+        text-align: left;
+        padding-left: .5em;
+    }
+    td:first-child {
+        width: 4em;
+        border-right: 2px solid black;
+    }
+    #filter-container {
+        width: 90%;
+        margin-bottom: 2.6em;
     }
 }
