@@ -39,7 +39,7 @@ table.sortable th {
     td {
         font-size: 14pt;
     }
-    tr td:first-child {
+    td:first-child {
         text-align: left;
     }
     th:not(:first-of-type) {
