@@ -63,9 +63,6 @@ class ContactTimeForm(forms.Form):
         required=False)
 
 class SurveyHireUsForm(forms.Form):
-    survey_referal_explain = forms.CharField(
-        label="If other, please explain",
-        required=False)
     survey_questions = forms.CharField(widget=forms.Textarea,
         label="Do you have any questions for us before we contact you?",
         required=False)
