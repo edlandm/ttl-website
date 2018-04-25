@@ -1,3 +1,8 @@
+:root {
+    --cool-blue: #008CBA;
+    --cool-light-blue: #33AEDC;
+    --cool-dark-blue: #004080;
+}
 form {
     display: none;
 }
