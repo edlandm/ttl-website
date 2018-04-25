@@ -5,18 +5,37 @@
 }
 form {
     display: none;
+    border-top: 2px solid black;
+    padding-top: 1em;
+    margin-top: 1em;
 }
-#id_business_or_event0:checked ~ #business-form {
-    display: block;
-}
+#id_business_or_event0:checked ~ #business-form,
 #id_business_or_event1:checked ~ #event-form {
     display: block;
 }
-
-.form {
-
+.main-centered>p {
+    margin-bottom: 1em;
+    text-align: center;
 }
-
+.main-centered>label {
+    border: 2px solid var(--cool-blue);
+    background-color: var(--cool-blue);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 15px;
+    transition: .2s linear;
+    text-align: center;
+}
+.main-centered>label:hover {
+    background-color: var(--cool-light-blue);
+}
+.main-centered>input[type=radio] {
+    display: none;
+}
+.main-centered>input[type=radio]:checked+label {
+    background-color: var(--cool-light-blue);
+    color: var(--cool-dark-blue);
+}
 /*
  * mobile only
  */
@@ -33,6 +52,12 @@ form {
         display: table-cell;
         width: 10%;
     }
+    .main-centered>label {
+        display: block;
+    }
+    .main-centered>label:first-of-type {
+        margin-bottom: .5em;
+    }
 }
 /*
  * larger screens
@@ -45,5 +70,9 @@ form {
     }
     input[type=submit] {
         margin-top: 10px;
+    }
+    .main-centered>label:first-of-type {
+        margin-left: 30%;
+        margin-right: 15%;
     }
 }
