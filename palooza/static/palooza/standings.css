@@ -7,7 +7,7 @@ tr {
 td {
     height: 2em;
 }
-tr td:first-child {
+td:first-child {
     text-align: right;
 }
 td:nth-child(2) {
@@ -16,8 +16,15 @@ td:nth-child(2) {
 td:nth-child(-n+2) {
     padding-right: .5em;
 }
+
 .diamond {
     background: linear-gradient(to bottom left, #FFF, #999);
+    background-size: auto 200%;
+    background-position: 0 100%;
+    transition: background-position 0.5s;
+}
+.diamond:hover {
+    background-position: 0 0;
 }
 .diamond .symbol {
     border-style: solid;
@@ -45,6 +52,7 @@ td:nth-child(-n+2) {
 .gold {
     background: radial-gradient(gold, #330);
 }
+
 #filter-container {
     position: relative;
 }
@@ -52,7 +60,8 @@ td:nth-child(-n+2) {
     position: absolute;
     right: 0;
 }
-@media screen and (max-width: 350px) {
+
+@media screen and (max-width: 390px) {
     /* really narrow screens */
     th {
         font-size: 12pt;
@@ -76,9 +85,9 @@ td:nth-child(-n+2) {
     input {
         width: 100%;
     }
-    td:nth-child(-n+2) {
-        text-align: right;
-    }
+    /*td:nth-child(-n+2) {*/
+        /*text-align: right;*/
+    /*}*/
     tbody tr {
         height: 2em;
     }
@@ -91,6 +100,9 @@ td:nth-child(-n+2) {
     }
     input[type=text] {
         height: 3em;
+    }
+    .diamond .symbol {
+        margin: 0 0 10px .1em;
     }
 }
 @media screen and (min-width: 500px) {

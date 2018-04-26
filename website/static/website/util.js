@@ -97,9 +97,9 @@ function errorMessage(el, message, options) {
     return true;
 }
 function clearErrors() {
+    // remove all error messages (className="error")
     var errors = document.getElementsByClassName("error");
     forEach(errors, function(error) {
-        console.log(error);
         error.parentNode.removeChild(error);
     });
 }

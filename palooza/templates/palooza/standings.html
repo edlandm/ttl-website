@@ -21,7 +21,9 @@
         {% for player in content %}
         {% with points=player.points %}
         <tr id="standings-{{player.pid}}">
-            <td class="{% if points >= 50 and points < 125 %}gold{% elif points >= 125 and points < 175 %}platinum{% elif points >= 175 %}diamond{% endif %}">
+            <td class="{% if points >= 50 and points < 125 %}gold{% elif
+                points >= 125 and points < 175 %}platinum{% elif points >= 175
+                %}diamond{% endif %}">
                 <div class="symbol"></div>{{player.rank}}
             </td>
             <td>{{player.padded_id}}</td>
