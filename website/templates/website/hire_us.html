@@ -4,17 +4,16 @@
 <h2>Hire Us to host a game for you</h2>
 <div class="main-centered">
     <p>
-        <label for="id_business_or_event0">
-            Is this for a game at your business, or a private party/event?
-        </label>
+        Is this for a game at your business, or a private party/event?
     </p>
-    <label for="id_business_or_event0">Business</label>
-    <input type="radio" id="id_business_or_event0"
-        name="business_or_event" value="Business">
 
-    <label for="id_business_or_event1">Private Event</label>
-    <input type="radio" id="id_business_or_event1"
+    <input type="radio" id="id_business_or_event0"
         name="business_or_event" value="Private Event">
+    <label for="id_business_or_event0">Business</label>
+
+    <input type="radio" id="id_business_or_event1"
+        name="business_or_event" value="Business">
+    <label for="id_business_or_event1">Private Event</label>
 
     <form method="post" id="business-form">
         {% csrf_token %}
