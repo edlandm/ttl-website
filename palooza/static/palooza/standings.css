@@ -96,6 +96,18 @@ td:nth-child(-n+2) {
 }
 @media screen and (min-width: 500px) {
     /* Desktop */
+    p {
+        margin: auto;
+        width: 80%;
+    }
+    #filter {
+        float: right;
+        clear: both;
+        margin-right: 10%;
+    }
+    #standings {
+        clear: both;
+    }
     td:nth-child(2) {
         text-align: left;
         padding-left: .5em;
