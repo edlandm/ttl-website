@@ -45,15 +45,11 @@ form {
  * mobile only
  */
 @media screen and (max-width: 500px) {
-    ul#id_business_multiple_locations,
-    ul#id_survey_previous_trivia
-    {
+    ul#id_survey_previous_trivia {
         display: table;
         table-layout: fixed;
     }
-    ul#id_business_multiple_locations li,
-    ul#id_survey_previous_trivia li
-    {
+    ul#id_survey_previous_trivia li {
         display: table-cell;
         width: 10%;
     }
