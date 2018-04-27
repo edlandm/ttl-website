@@ -57,14 +57,6 @@ td:nth-child(-n+2) {
     background: radial-gradient(gold, #330);
 }
 
-#filter-container {
-    position: relative;
-}
-#filter-container input {
-    position: absolute;
-    right: 0;
-}
-
 @media screen and (max-width: 390px) {
     /* really narrow screens */
     th {
@@ -78,13 +70,6 @@ td:nth-child(-n+2) {
     /* Phones */
     th {
         text-align: center;
-    }
-    #filter-container {
-        width: 100%;
-        margin-bottom: 3.4em;
-    }
-    #filter-container * {
-        position: relative;
     }
     input {
         width: 100%;
@@ -118,9 +103,5 @@ td:nth-child(-n+2) {
     td:first-child {
         width: 4em;
         border-right: 2px solid black;
-    }
-    #filter-container {
-        width: 90%;
-        margin-bottom: 2.6em;
     }
 }
