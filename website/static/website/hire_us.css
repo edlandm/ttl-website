@@ -36,6 +36,11 @@ form {
     background-color: var(--cool-light-blue);
     color: var(--cool-dark-blue);
 }
+
+.error {
+    color: red;
+    font-size: 16pt;
+}
 /*
  * mobile only
  */
