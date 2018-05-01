@@ -99,9 +99,9 @@ function errorMessage(el, message, options) {
 function clearErrors() {
     // remove all error messages (className="error")
     var errors = document.getElementsByClassName("error");
-    forEach(errors, function(error) {
-        error.parentNode.removeChild(error);
-    });
+    while(errors.length > 0) {
+        errors[0].parentNode.removeChild(errors[0]);
+    }
 }
 
 forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
