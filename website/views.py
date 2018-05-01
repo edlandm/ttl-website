@@ -120,6 +120,18 @@ class HireUs(ContentPage, generic.TemplateView):
         "meta_tags": [
             {"name": "robots",
              "content": "noindex, nofollow"}]}
+    def success(self, request):
+        """ Everything worked! render page with success message"""
+        context = self.extra_context
+        context['success'] = True
+        return render(request, self.template_name, context)
+
+    def error(self, request, message):
+        """ something went wrong. render the page with an error message """
+        context = self.extra_context
+        context['error'] = message
+        return render(request, self.template_name, context)
+
 
 class Apply(ContentPage, generic.TemplateView):
     extra_context = {
