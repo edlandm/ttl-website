@@ -1,6 +1,6 @@
-from datetime  import date, datetime, timezone, timedelta
-from PIL import Image
-from random    import choice
+from datetime import date, datetime, timezone, timedelta
+from PIL      import Image
+from random   import choice
 import re
 
 from django.contrib.auth.models import User
@@ -12,9 +12,10 @@ from django.utils     import dates
 from django.utils.text import slugify
 from django.views     import generic, View
 
-from .models          import Announcement, Clue, Event, Pennant, PennantDistrict, PennantStandings, Venue
-from .forms           import BusinessHireUsForm, EventHireUsForm, LoginForm
-from .util            import ordinal
+from .models import (Announcement, Clue, Event, Pennant, PennantDistrict,
+                     PennantStandings, Venue )
+from .forms  import BusinessHireUsForm, EventHireUsForm, LoginForm
+from .util   import ordinal
 
 LOGIN_URL = '/triviatimelive/login/'
 
