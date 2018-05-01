@@ -111,6 +111,13 @@ function getCookie(name) {
     }
     return true;
 }
+function deleteByClassName(className) {
+    // remove all elements with class='<className>' from the DOM
+    var els = document.getElementsByClassName(className);
+    while(els.length > 0) {
+        els[0].parentNode.removeChild(els[0]);
+    }
+}
 function clearErrors() {
     // remove all error messages (className="error")
     var errors = document.getElementsByClassName("error");
