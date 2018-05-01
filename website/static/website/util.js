@@ -90,6 +90,20 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+function errorMessage(el, message, options) {
+    // position can be one of ["after", "append", "before", "prepend"]
+    var position = options.position || "after",
+        className = options.className || "error",
+        htmlString,
+        newElement;
+    // build html message
+    // place element
+    switch(position) {
+        case "after":
+            htmlString = '<div class="' + className + '">' + message + '</div>';
+            el.insertAdjacentHTML("afterend", htmlString);
+            break;
+        case "append":
             newElement = document.createElement("div");
             newElement.classList.add(className);
             newElement.innerHTML = message;
