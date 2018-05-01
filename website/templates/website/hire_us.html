@@ -26,3 +26,154 @@
         <input type="submit" value="Submit">
     </form>
 </div>
+
+<script type="text/javascript" src="{% static 'website/util.js' %}"></script>
+<script type="text/javascript">
+    // client-side validation
+    function validateBusiness(form) {
+        // Validate and clean form data
+        // trim all text inputs
+        forEach(form.querySelectorAll('input[type=text]'),
+            function(e) {e.value = e.value.trim();})
+        var error,
+            input,
+            message,
+            data = {
+                csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]'),
+                eventType: 'Business',
+                businessName: form.querySelector('[name=business_name]').value,
+                businessPhone: form.querySelector('[name=business_phone]')
+                    .value.replace(/[- ]/g, ''),
+                clientName: form.querySelector('[name=client_name]').value,
+                clientPhone: form.querySelector('[name=client_phone]')
+                    .value.replace(/[- ]/, ''),
+                clientEmail: form.querySelector('[name=client_email]').value,
+                businessType: form.querySelector('[name=business_type]').value,
+                businessTypeOther: form.querySelector(
+                    '[name=business_type_other]').value,
+                previousTrivia: form.querySelector(
+                    'input[name=survey_previous_trivia]:checked').value,
+                previousTriviaExplain: form.querySelector(
+                    '[name=survey_previous_trivia_explain]').value,
+                contactMethod: form.querySelector('[name=contact_method]').value,
+                contactDays: Array.prototype.map.call(
+                    form.querySelectorAll('[name=contact_days]:checked'),
+                    function(e) { return e.value }),
+                contactTime: form.querySelector('[name=contact_time]').value,
+                surveyQuestions: form.querySelector(
+                    '[name=survey_questions]').value};
+
+        if(data.businessPhone.length < 10) {
+            error = true;
+            input = form.querySelector('business_phone'),
+            message = 'Please include an area code in your phone number';
+        } else if(data.clientPhone.length < 10) {
+            error = true;
+            input = form.querySelector('client_phone'),
+            message = 'Please include an area code in your phone number';
+        } else if(data.businessType === 'other' && !data.businessTypeOther) {
+            error = true;
+            input = form.querySelector('business_type_other'),
+            message = 'Could you describe what type of venue it is?';
+        } else if(data.previousTrivia === 'yes' && !data.previousTriviaExplain) {
+            error = true;
+            input = form.querySelector('survey_previous_trivia_explain'),
+            message = "You said that you've had a trivia game before. " +
+                "Could you tell us whos? We're just curious.";
+        }
+
+        if (error) {
+            errorMessage(input, message, {position: 'before'});
+            input.focus();
+            return false;
+        } else {
+            return data;
+        }
+    }
+
+    function validateEvent(form) {
+        // Validate and clean form data
+        // trim all text inputs
+        forEach(form.querySelectorAll('input[type=text]'),
+            function(e) {e.value = e.value.trim();})
+        var error,
+            input,
+            message,
+            data = {
+                csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value,
+                eventType: 'Private Event',
+                clientName: form.querySelector('[name=client_name]').value,
+                clientPhone: form.querySelector('[name=client_phone]').value,
+                clientEmail: form.querySelector('[name=client_email]').value,
+                eventSummary: form.querySelector('[name=event_summary]').value,
+                eventDate: form.querySelector('[name=event_date]').value,
+                eventLocation: form.querySelector('[name=event_location]').value,
+                eventPeople: form.querySelector('[name=event_people]').value,
+                contactMethod: form.querySelector('[name=contact_method]').value,
+                contactDays: Array.prototype.map.call(
+                    form.querySelectorAll('[name=contact_days]:checked'),
+                    function(e) { return e.value }),
+                contactTime: form.querySelector('[name=contact_time]').value,
+                surveyQuestions: form.querySelector(
+                    '[name=survey_questions]').value};
+
+        if(data.clientPhone.length < 10) {
+            error = true;
+            input = form.querySelector('[name=client_phone]'),
+            message = 'Please include an area code in your phone number';
+        } else if(!/^\d{2}\/\d{2}\/\d{2}$/.test(data.eventDate)) {
+            error = true;
+            input = form.querySelector('[name=event_date]'),
+            message = 'Please enter a date in this format: MM/DD/YY';
+        }
+
+        if (error) {
+            errorMessage(input, message, {position: 'before'});
+            input.focus();
+            return false;
+        } else {
+            return data;
+        }
+    }
+
+    function submitForm(e) {
+        // determine which form was submitted, validate, clean, post data
+        e.preventDefault();
+        clearErrors();
+        var form = e.target,
+            data;
+        switch(form.id) {
+            // determine which form to validate
+            case "business-form":
+                data = validateBusiness(form);
+                break;
+            case "event-form":
+                data = validateEvent(form);
+                break;
+            default:
+                errorMessage(
+                    form.querySelector('input[type=submit]'),
+                    "Oops! Something went wrong!",
+                    {position: 'before'});
+                return false;
+                break;
+        }
+        if(data) {
+            // post the data
+            console.log(data);
+            // post("{% url 'website:hire_us' %}", data);
+        } else {
+            // something's invalid; display error message
+            errorMessage(
+                form.querySelector('input[type=submit]'),
+                "Oops! Something's invalid.",
+                {position: 'before'});
+        }
+    }
+
+    var businessForm = document.getElementById('business-form'),
+        eventForm = document.getElementById('event-form');
+
+    businessForm.onsubmit = submitForm;
+    eventForm.onsubmit = submitForm;
+</script>
