@@ -7,7 +7,7 @@ class PlayerAdmin(admin.ModelAdmin):
     list_filter = ["name", "date_added"]
 
     def player_id(self, obj):
-        return str(obj.id).zfill(3)
+        return str(obj.pid).zfill(3)
     player_id.short_description = "Player ID"
 
 
