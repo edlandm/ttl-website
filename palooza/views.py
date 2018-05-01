@@ -9,7 +9,7 @@ from website.models import Venue
 from .models import Player, CheckIn, VenueDiscount
 import json
 
-LOGIN_URL = '/triviatimelive/login/'
+LOGIN_URL = '/login/'
 
 class Standings(ContentPage, generic.ListView):
     extra_context = {
