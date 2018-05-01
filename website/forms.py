@@ -46,7 +46,16 @@ class BusinessContactForm(forms.Form):
         required=False)
 
 class EventContactForm(forms.Form):
-    pass
+    client_name  = CapitalizedField(label="Contact name")
+    client_phone = forms.CharField(label="Phone")
+    client_email = forms.EmailField(label="Email")
+
+    event_summary = forms.CharField(label="What is your event?")
+    event_date    = forms.DateField(label="Event Date (MM/DD/YY)",
+        input_formats=['%m/%d/%Y', '%m/%d/%y'])
+    event_location = forms.CharField()
+    event_people  = forms.CharField(label="About how many people do you think will be there?")
+
 
 class ContactTimeForm(forms.Form):
     contact_method = forms.ChoiceField(
