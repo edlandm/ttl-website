@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <title>TTL - Add Palooza Checkins</title>
+        <meta name=viewport content='width=device-width, initial-scale=1'>
+        <link rel="stylesheet" type="text/css" href="{% static 'website/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'website/content_page-header.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'website/form.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'palooza/checkins_add.css' %}" />
+    </head>
+    <body>
+        {% include "website/logo_and_header.html" with header="Move The Pennant"%}
+        <div id="navbar-container">
+            {% include "website/updates_navbar.html" %}
+        </div>
+        <div id="content">
+            {% if success %}
+            <h2>Checkins successfully added!</h2>
+            {% else %}
+            <h2>Add Palooza Checkins</h2>
+            {% endif %}
+            <ol class="directions"><b>Instructions</b>
+                <li>Select a venue</li>
+                <li>Pick a date</li>
+                <li>
+                    <ul>Add a comma-separated list of players
+                        <li>If it's a new player, use this format:
+                            <i>NUM: NAME</i></li>
+                        <li>If the player has previously checked in, just use
+                            the three digit number</li>
+                        <li>Example:<br>009: Tom Jones, 123: Elvis Costello, 002, 007, 069</li>
+                    </ul>
+                </li>
+            </ol>
+            <form id="checkins" action="post">
+                {% csrf_token %}
+                <select id="venues" name="venues">
+                    <option value="">Select a Venue</option>
+                    {% for venue in venues %}
+                    <option value="{{venue.code}}">{{venue.name}}</option>
+                    {% endfor %}
+                </select>
+                <input type="date" name="date">
+                <textarea id="players" name="players"></textarea>
+                <input type="submit">
+            </form>
+        </div>
+        <script type="text/javascript" src="{% static 'website/util.js' %}"></script>
+        <script type="text/javascript">
+            function validate(form) {
+                // Return validated data as dict
+                // Return false and display error messages if data is not valid
+                var errors = false,
+                    data = {
+                        venue: form.querySelector('[name=venues]').value,
+                        date:  form.querySelector('[name=date]').value,
+                        players: [],
+                        newPlayers: []},
+                    textarea = form.querySelector('[name=players]').value,
+                    submit = form.querySelector('[type=submit]');
+                forEach(textarea.split(/, ?/), function(p) {
+                    var chunks  = p.split(/: ?/).map(
+                            function(s) { return s.trim(); }),
+                        message = "";
+
+                    if(chunks.length === 2) {
+                        data.newPlayers.push({
+                            pidm: chunks[0],
+                            name: chunks[1]});
+                    } else if(chunks.length === 1) {
+                        data.players.push(chunks[0]);
+                    } else {
+                            message = "Something's wrong with " + p;
+                    }
+
+                    if(chunks[0].length > 3) {
+                        message = "Number is too long: " + chunks[0];
+                    }
+
+                    if(message) {
+                        errorMessage(submit, message, {position: 'before'});
+                        errors = true;
+                    }
+                });
+                if(errors) {
+                    console.error(data)
+                    return false;
+                } else
+                    return data;
+            }
+
+            function submitSuccess(form, context) {
+                var button = form.querySelector('[type=submit]');
+                form.querySelector('[name=venues]').value = '';
+                form.querySelector('[name=date]').value = '';
+                form.querySelector('[name=players]').value = '';
+                errorMessage(button,
+                    'Players successfully checked in! Feel free to add more',
+                    {position: 'before',
+                     className: 'success'})
+            }
+
+            function submitError(form, context) {
+                var button = form.querySelector('[type=submit]');
+                errorMessage(button,
+                    context.error,
+                    {position: 'before'})
+            }
+
+            function submit(e) {
+                // Submit form data if valid
+                e.preventDefault();
+                var form = e.target,
+                    button = form.querySelector('[type=submit]');
+                deleteByClassName('success');
+                clearErrors();
+                data = validate(form);
+                if(data) {
+                    postJSON("{% url 'palooza:checkins_add' %}",
+                        JSON.stringify(data),
+                        getCookie('csrftoken'),
+                        function(xhr) {
+                            var response = xhr.target,
+                                context = JSON.parse(response.responseText);
+                            if(response.status === 200) {
+                                if(context.success) {
+                                    submitSuccess(form, context);
+                                } else {
+                                    submitError(form, context);
+                                }
+                            } else {
+                                errorMessage(button,
+                                    'Network error. Please try again',
+                                    {position: 'before'})
+                            }
+                        });
+                }
+            }
+
+            var form = document.getElementById('checkins');
+            form.onsubmit = submit;
+        </script>
+    </body>
+</html>

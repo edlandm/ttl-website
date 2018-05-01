@@ -1,0 +1,46 @@
+/* TriviaPalooza: checkins_add.css */
+form {
+    display: flex;
+    flex-direction: column;
+}
+form *:not(:last-child) {
+    margin-bottom: 1em;
+}
+li>ul {
+    margin-left: -2em;
+}
+.error, .success {
+    text-align: center;
+}
+.error {
+    color: red;
+}
+.success {
+    color: green;
+}
+@media screen and (max-width: 500px) {
+    /* Phones */
+    textarea {
+        font-size: 14pt;
+        height: 4em;
+    }
+}
+@media screen and (min-width: 500px) {
+    /* Desktop */
+    .directions {
+        margin: 1em auto;
+        width: 80%;
+    }
+
+    form {
+        width: 80%;
+        margin: 0 auto;
+    }
+    textarea {
+        border-radius: 15px;
+        font-size: 18pt;
+        height: 6em;
+        line-height: .6em;
+        padding: 0.3em 0;
+    }
+}
