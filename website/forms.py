@@ -18,12 +18,12 @@ class CapitalizedField(forms.CharField):
 
 
 class BusinessContactForm(forms.Form):
-    business_name    = CapitalizedField()
-    business_phone   = forms.CharField()
+    business_name  = CapitalizedField()
+    business_phone = forms.CharField()
 
-    client_name     = CapitalizedField(label="Contact name")
-    client_phone    = forms.CharField(label="Phone")
-    client_email    = forms.EmailField(label="Email")
+    client_name  = CapitalizedField(label="Contact name")
+    client_phone = forms.CharField(label="Phone")
+    client_email = forms.EmailField(label="Email")
 
     business_type = forms.ChoiceField(
         choices=(
