@@ -75,20 +75,21 @@ function postJSON(path, data, token, callback, method) {
         xhr.onloadend = callback;
     }
 };
-function errorMessage(el, message, options) {
-    // position can be one of ["after", "append", "before", "prepend"]
-    var position = options.position || "after",
-        className = options.className || "error",
-        htmlString,
-        newElement;
-    // build html message
-    // place element
-    switch(position) {
-        case "after":
-            htmlString = '<div class="' + className + '">' + message + '</div>';
-            el.insertAdjacentHTML("afterend", htmlString);
-            break;
-        case "append":
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
             newElement = document.createElement("div");
             newElement.classList.add(className);
             newElement.innerHTML = message;
