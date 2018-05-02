@@ -9,6 +9,9 @@ form {
     padding-top: 1em;
     margin-top: 1em;
 }
+input[type=date] {
+    display: block;
+}
 #id_business_or_event0:checked ~ #business-form,
 #id_business_or_event1:checked ~ #event-form {
     display: block;
@@ -36,7 +39,6 @@ form {
     background-color: var(--cool-light-blue);
     color: var(--cool-dark-blue);
 }
-
 .error {
     color: red;
     font-size: 16pt;
