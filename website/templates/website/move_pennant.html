@@ -147,7 +147,7 @@
                     nextGame;
 
                 if (pennantInput && !venueInput) {
-                    if(nextGameInput.value === nextGames[currentVenues[pennantInput.value]]) {
+                    if(nextGameInput.value !== nextGames[pennantInput.value][currentVenues[pennantInput.value]]) {
                         // If the "next game" value was changed, that's fine.
                         // Set venue to be the current venue
                         venue = currentVenues[pennantInput.value];
