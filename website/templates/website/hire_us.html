@@ -39,7 +39,7 @@
             input,
             message,
             data = {
-                csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]'),
+                csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value,
                 eventType: 'Business',
                 businessName: form.querySelector('[name=business_name]').value,
                 businessPhone: form.querySelector('[name=business_phone]')
