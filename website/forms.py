@@ -52,10 +52,10 @@ class EventContactForm(forms.Form):
 
     event_summary = forms.CharField(label="What is your event?")
     event_date    = forms.DateField(label="Event Date (MM/DD/YY)",
+        widget=forms.DateInput(attrs={'type': 'date'}),
         input_formats=['%m/%d/%Y', '%m/%d/%y'])
     event_location = forms.CharField()
     event_people  = forms.CharField(label="About how many people do you think will be there?")
-
 
 class ContactTimeForm(forms.Form):
     contact_method = forms.ChoiceField(
