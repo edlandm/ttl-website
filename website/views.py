@@ -120,6 +120,34 @@ class HireUs(ContentPage, generic.TemplateView):
         "meta_tags": [
             {"name": "robots",
              "content": "noindex, nofollow"}]}
+
+    def post(self, request):
+        """ validate form and send email with processed data """
+        form = request.POST
+        event_type = form.get('eventType')
+
+        # validate/clean data and set send_email method
+        if event_type == 'Business':
+            cleaned_data = self.validate_business(form)
+            email_method = self.email_business
+        elif event_type == 'Private Event':
+            cleaned_data = self.validate_event(form)
+            email_method = self.email_event
+        else:
+            return self.error(request, 'Invalid Event Type')
+
+        if type(cleaned_data) == list:
+            # reload page with error messages
+            print(form)
+            print(cleaned_data)
+            return
+            return self.error(request, cleaned_data)
+        else:
+            # send email and render page with success message
+            email_method(cleaned_data, debug=False)
+            return
+            return self.success(request)
+
     def success(self, request):
         """ Everything worked! render page with success message"""
         context = self.extra_context
@@ -129,9 +157,290 @@ class HireUs(ContentPage, generic.TemplateView):
     def error(self, request, message):
         """ something went wrong. render the page with an error message """
         context = self.extra_context
-        context['error'] = message
+        context['errors'] = message
         return render(request, self.template_name, context)
 
+    def validate_business(self, form):
+        """ Validate and clean data for business request
+            return dict of cleaned data or errors """
+        errors = []
+        # Validate and clean Client info
+        client = self.validate_client(
+            type('Client', (object,), {
+                'name': form.get('clientName'),
+                'phone': form.get('clientPhone'),
+                'email': form.get('clientEmail')}))
+        if type(client) == list:
+            errors.extend(client)
+
+        # Validate and clean Contact info
+        contact = self.validate_contact(
+            type('Contact', (object,), {
+                'method': form.get('contactMethod'),
+                'days': form.get('contactDays'),
+                'time': form.get('contactTime')}))
+        if type(contact) == list:
+            errors.extend(contact)
+
+        # Validate and clean Business info
+        business = type('Business', (object,), {
+            'client': client,
+            'contact': contact,
+            'name': form.get('businessName'),
+            'phone': form.get('businessPhone'),
+            'type': form.get('businessType'),
+            'type_other': form.get('businessTypeOther'),
+            'previous_trivia': form.get('previousTrivia'),
+            'previous_trivia_explain': form.get('previousTriviaExplain'),
+            'survey_questions': form.get('surveyQuestions')})
+
+        phone = self.validate_phone(business.phone)
+        if type(phone) == dict:
+            errors.append({'Business Phone': phone['error']})
+        else:
+            business.phone = phone
+
+        if errors:
+            return errors
+        else:
+            return business
+
+    def validate_event(self, form):
+        """ Validate and clean data for private event request
+            return dict of cleaned data or errors """
+        errors = []
+        client_name = form.get('clientName')
+        client_phone = form.get('clientPhone')
+        client_email = form.get('clientEmail')
+        event_summary = form.get('eventSummary')
+        event_date = form.get('eventDate')
+        event_location = form.get('eventLocation')
+        event_people = form.get('eventPeople')
+        contact_method = form.get('contactMethod')
+        contact_days = form.get('contactDays')
+        contact_time = form.get('contactTime')
+        survey_questions = form.get('surveyQuestions')
+
+        # Validate and clean client info
+        client = self.validate_client(
+            type('Client', (object,), {
+                'name': client_name,
+                'phone': client_phone,
+                'email': client_email}))
+        if type(client) == list:
+            errors.extend(client)
+
+        # Validate and clean contact info
+        contact = self.validate_contact(
+            type('Contact', (object,), {
+                'method': contact_method,
+                'days': contact_days,
+                'time': contact_time}))
+        if type(contact) == list:
+            errors.extend(contact)
+
+        event = type('Event', (object,), {
+            'client': client,
+            'contact': contact,
+            'summary': event_summary,
+            'date': event_date,
+            'location': event_location,
+            'people': event_people,
+            'survey_questions': survey_questions})
+
+        # Validate Event Date
+        event.date = re.sub(r'^(\d{4})-(\d{2})-(\d{2})', r'\2/\3/\1', event.date)
+        if not re.match(r'^\d{2}/\d{2}/(\d{2}|\d{4})$', event.date):
+            errors.append({
+                'Event Date': "Not a valid date. Needs to be: MM/DD/YY"})
+
+        if errors:
+            return errors
+        else:
+            return event
+
+    def validate_client(self, client):
+        """ Validate client info (takes Client object)
+            returns either Client with cleaned data, or list of errors """
+        errors = []
+        phone = self.validate_phone(client.phone)
+        if type(phone) == dict:
+            errors.append({'Client Phone': phone['error']})
+        else:
+            client.phone = phone
+
+        # Lazy email validation: make sure email at least has a '@' in it
+        if '@' not in client.email:
+            errors.append({'Client Email': "Not a valid email"})
+
+        if errors:
+            return errors
+        else:
+            return client
+
+    def validate_contact(self, contact):
+        """ Validate contact info (takes Contact object)
+            returns either Contact with cleaned data, or list of errors """
+        errors = []
+
+        # Clean Contact Days
+        contact.days = [ d.strip().title() for d in contact.days.split(',')]
+
+        if errors:
+            return errors
+        else:
+            return contact
+
+    def validate_phone(self, phone):
+        """ Return either a cleaned phone number or an error dict """
+        phone = re.sub(r'[ -]+', '', phone)
+        if len(phone) < 10:
+            return {'error': "Phone number doesn't have enough digits"}
+        elif len(phone) == 10 or (len(phone == 11 and phone[0] == '1')):
+            phone = re.sub(
+                r'^(1)?(\d{3})(\d{3})(\d{4})$',
+                r'\1-\2-\3-\4',
+                phone)
+            if phone[0] == '-':
+                phone = '1' + phone
+        else:
+            return {'error': "Phone number has too many digits or is not a US phone number"}
+
+        return phone
+
+    def email_business(self, business, debug=False):
+        """ Compose and send Business email
+            Expects a Business object
+            debug=True will print out the email instead of sending it
+            Return None """
+        if business.__name__ != 'Business':
+            raise TypeError('Expected Business, got ' + business.__name__)
+
+        subject = "Business Game Request from: {name} at {business}".format(
+            name=business.client.name,
+            business=business.name)
+        summary = "{name} is requesting a game at {business}".format(
+            name=business.client.name,
+            business=business.name)
+
+        # Determine business type
+        if business.type_other:
+            business_type = business.type_other
+        else:
+            business_type = business.type
+
+        # Determine if they've previously had trivia
+        if business.previous_trivia_explain:
+            previous = business.previous_trivia_explain
+        else:
+            previous = 'No'
+
+        # Business section
+        business_fmt = "Business:\n\tName: {name}\n\tType: {type}\n\tPhone: {phone}\n\tPrevious Trivia: {previous}".format(
+            name=business.name,
+            type=business_type,
+            phone=business.phone,
+            previous=previous)
+
+        # Client section
+        client_fmt = "Client: \n\tName: {name}\n\tPhone: {phone}\n\tEmail: {email}".format(
+            name=business.client.name,
+            phone=business.client.phone,
+            email=business.client.email)
+
+        # Contact preferences section
+        contact_fmt = "Preferred Contact:\n\tMethod: {method}\n\tDays: {days}\n\tTime: {time}".format(
+            method=business.contact.method.title(),
+            days=', '.join(business.contact.days),
+            time=business.contact.time)
+
+        # Put it all together into a "Details" section
+        details = "Details:\n{line}\n{business}\n\n{client}\n\n{contact}".format(
+                line='--------------------------------------------------------------------------------',
+                business=business_fmt,
+                client=client_fmt,
+                contact=contact_fmt)
+
+        # Do they have any questions for us?
+        if business.survey_questions:
+            details += '\n\nQuestions:\n\t{questions}'.format(
+                questions=business.survey_questions)
+
+        body = '{summary}\n\n{details}'.format(
+            summary=summary,
+            details=details)
+
+        # Send email
+        if debug:
+            # Just print it
+            print("Subject: " + subject)
+            print("Body:\n" + body)
+        else:
+            self.send_email(subject, body)
+        return
+
+    def email_event(self, event, debug=False):
+        """ Compose and send event request email
+            Expects a Event object
+            debug=True will print out the email instead of sending it """
+        if event.__name__ != 'Event':
+            raise TypeError('Expected Event, got ' + event.__name__)
+
+        subject = "Private Event request from {name} on {date}".format(
+            name=event.client.name,
+            date=event.date)
+        summary = "{name} is requesting a game for a private event on {date}".format(
+            name=event.client.name,
+            date=event.date)
+        event_fmt = "Event:\n\tDate: {date}\n\tLocation: {location}\n\tSummary: {summary}\n\tEstimated # of People: {people}".format(
+            date=event.date,
+            location=event.location,
+            summary=event.summary,
+            people=event.people)
+        # Client section
+        client_fmt = "Client: \n\tName: {name}\n\tPhone: {phone}\n\tEmail: {email}".format(
+            name=event.client.name,
+            phone=event.client.phone,
+            email=event.client.email)
+
+        # Contact preferences section
+        contact_fmt = "Preferred Contact:\n\tMethod: {method}\n\tDays: {days}\n\tTime: {time}".format(
+            method=event.contact.method.title(),
+            days=', '.join(event.contact.days),
+            time=event.contact.time)
+
+        # Put it all together into a "Details" section
+        details = "Details:\n{line}\n{event}\n\n{client}\n\n{contact}".format(
+            line='--------------------------------------------------------------------------------',
+            event=event_fmt,
+            client=client_fmt,
+            contact=contact_fmt)
+        # Do they have any questions for us?
+        if event.survey_questions:
+            details += '\n\nQuestions:\n\t{questions}'.format(
+                questions=event.survey_questions)
+
+        body = '{summary}\n\n{details}'.format(
+            summary=summary,
+            details=details)
+
+        # Send email
+        if debug:
+            # Just print it
+            print("Subject: " + subject)
+            print("Body:\n" + body)
+        else:
+            self.send_email(subject, body)
+        return
+
+    def send_email(self, subject, body):
+        """ send email """
+        from django.core.mail import send_mail
+        send_mail(
+            subject,
+            body,
+            'from-address',
+            ['to-address'])
 
 class Apply(ContentPage, generic.TemplateView):
     extra_context = {
