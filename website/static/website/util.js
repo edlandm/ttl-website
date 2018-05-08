@@ -61,6 +61,35 @@ function post(path, params, method) {
     document.body.appendChild(form);
     form.submit();
 };
+function postJSON(path, data, token, callback, method) {
+    // send json data as post request
+    method = method || "post"; // Set method to post by default if not specified.
+    var xhr = new XMLHttpRequest();
+
+    xhr.open(method, path, true);
+    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    xhr.setRequestHeader('X-CSRFToken', token);
+    xhr.send(JSON.stringify(data));
+
+    if(callback) {
+        xhr.onloadend = callback;
+    }
+};
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 function errorMessage(el, message, options) {
     // position can be one of ["after", "append", "before", "prepend"]
     var position = options.position || "after",
@@ -96,12 +125,19 @@ function errorMessage(el, message, options) {
     }
     return true;
 }
+function deleteByClassName(className) {
+    // remove all elements with class='<className>' from the DOM
+    var els = document.getElementsByClassName(className);
+    while(els.length > 0) {
+        els[0].parentNode.removeChild(els[0]);
+    }
+}
 function clearErrors() {
     // remove all error messages (className="error")
     var errors = document.getElementsByClassName("error");
-    forEach(errors, function(error) {
-        error.parentNode.removeChild(error);
-    });
+    while(errors.length > 0) {
+        errors[0].parentNode.removeChild(errors[0]);
+    }
 }
 
 forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
