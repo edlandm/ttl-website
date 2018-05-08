@@ -160,9 +160,11 @@ class Pennant(models.Model):
     def update_next_game(self):
         """ if self.next_game is in the past, set it to the next week
             return self.next_game """
+        today = date.today()
         venue = self.get_current_venue()
-        self.next_game = venue.next_game()
-        self.save()
+        if self.next_game < today:
+            self.next_game = venue.next_game()
+            self.save()
         return self.next_game
 
 class PennantStandings(models.Model):
