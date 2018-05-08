@@ -21,12 +21,21 @@ td:last-child, th:last-child {
     border-right: 1px solid black;
     padding-right: 0.5em;
 }
-tr:nth-child(2n) td {
+tr:nth-child(2n) {
     background-color: #BBB;
 }
 tr:last-child td {
     border-bottom: 1px solid black;
 }
+
+/* Decorations for venues that have the pennant */
+tr.pennant {
+    background: radial-gradient(circle farthest-side, #CDF, var(--navbar-focus-color));
+}
+.symbol {
+    display: none;
+}
+
 table.sortable th {
     background-color: #999;
     color: #000;
@@ -52,9 +61,27 @@ table.sortable th {
         border-right: 1px solid black;
     }
 }
+@media screen and (min-width: 360px) {
+    /* All but the tiniest screens */
+    .pennant .symbol {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 12px solid var(--second-bg-color);
+        margin-left: 5px;
+    }
+}
 @media screen and (min-width: 500px) {
     /* Desktop */
     table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
         content: " \25B4\25BE";
+    }
+}
+@media screen\0, screen\9 {
+    /* IE specific rules because it sucks that bad */
+    tr.pennant {
+        background: radial-gradient(circle farthest-side, #CDF, #508F9E);
     }
 }

@@ -15,8 +15,8 @@
     </thead>
 {% endifchanged %}
     {% with standings=venue.pennantstandings %}
-    <tr>
-        <td>{{venue.name}}</td>
+    <tr{% if venue.has_pennant %} class="pennant"{% endif %}>
+        <td>{{venue.name}}<div class="symbol"></div></td>
         <td>{{standings.win}}</td>
         <td>{{standings.defend}}</td>
         <td>{{standings.place}}</td>
