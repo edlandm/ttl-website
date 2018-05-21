@@ -6,6 +6,7 @@ import re
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.http      import HttpResponse, HttpResponseRedirect, Http404
 from django.utils     import dates
