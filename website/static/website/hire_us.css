@@ -16,6 +16,13 @@ input[name=event_type]:nth-of-type(1):checked ~ #business-form,
 input[name=event_type]:nth-of-type(2):checked ~ #event-form {
     display: block;
 }
+#content h2.success {
+    color: green;
+}
+#content h2.error {
+    color: red;
+    font-size: 24pt;
+}
 .main-centered>p {
     margin-bottom: 1em;
     text-align: center;
