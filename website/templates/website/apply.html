@@ -1,21 +1,138 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'website/form.css' %}">
+<link rel="stylesheet" href="{% static 'website/apply.css' %}">
+{% if success and not errors %}
+<h2 class="success">Your application has been submitted! We will try to get back to you as
+    soon as possible</h2>
+{% elif errors %}
+<h2 class="error">Oops, looks like there was an error.</h2>
+{% else %}
 <h2>Apply to be trivia host!</h2>
+{% endif %}
 <div class="main-centered">
-    <form method="post">
-        Name
-        Phone
-        Email
-        Street Address
-        City
-        How did you hear about us?
-        Nights Available
-        Are you over 21?
-        Do you have reliable means of transportation?
-        Do you own a laptop?
-        Do you have iTunes or a similar means of playing music?
-        Do you have Microsoft Excel or a similar means of using spreadsheets?
-        Do you have any relevant experience? (not required, but a plus)
-        Why do you want to be a trivia host?
-        Have you played our game before? If so, where?
-        Is there anything else you'd like to tell us about yourself?
+    <form method="post" id="form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
     </form>
 </div>
+<script type="text/javascript" src="{% static 'website/util.js' %}"></script>
+<script type="text/javascript">
+    // client-side validation
+    function validate(form) {
+        // Trim any extra spaces from inputs
+        var error,
+            input,
+            message,
+            getValue = function(e) { return e.value },
+            data = {
+                csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value,
+                name:     form.querySelector('[name=name]').value,
+                phone:    form.querySelector('[name=phone]')
+                    .value.replace(/[- ]/g, ''),
+                email:    form.querySelector('[name=email]').value,
+                address:  form.querySelector('[name=address]').value,
+                city:     form.querySelector('[name=city]').value,
+                referral: form.querySelector('[name=referral]').value,
+                days_available: Array.prototype.map.call(
+                    form.querySelectorAll('[name=days_available]:checked'),
+                    getValue),
+                is_21:     form.querySelector('[name=is_21]:checked').value,
+                has_transportation: form.querySelector('[name=has_transportation]:checked').value,
+                has_laptop:      form.querySelector('[name=has_laptop]:checked').value,
+                has_media_player: form.querySelector('[name=has_media_player]:checked').value,
+                has_excel:       form.querySelector('[name=has_excel]:checked').value,
+                has_experience:  form.querySelector('[name=has_experience]:checked').value,
+                survey_reason:   form.querySelector('[name=survey_reason]').value,
+                survey_played_before: form.querySelector('[name=survey_played_before]:checked').value,
+                survey_played_before_explain: form.querySelector('[name=survey_played_before_explain]').value,
+                survey_extra_info: form.querySelector('[name=survey_extra_info]').value,
+            };
+
+        // trim any extra spaces from the ends of values
+        forEach(Object.keys(data), function(k) {
+            var val = data[k];
+            if(typeof(val) === "string")
+                data[k] = data[k].trim();
+        });
+
+        if(data.phone.length < 10) {
+            error = true;
+            input = form.querySelector('[name=phone]'),
+            message = 'Please include an area code in your phone number';
+        } else if(data.survey_played_before === 'yes' && !data.survey_played_before_explain) {
+            console.log(data.survey_played_before)
+            error = true;
+            input = form.querySelector('[name=survey_played_before_explain]');
+            message = "Where have you played our game before?";
+        } else if(!data.days_available.length) {
+            error = true;
+            input = document.getElementById('id_days_available');
+            message = "We need you to be available at least one night";
+        }
+
+        if (error) {
+            errorMessage(input, message, {position: 'before'});
+            input.focus();
+            return false;
+        } else {
+            return data;
+        }
+    }
+
+    function submitForm(e) {
+        e.preventDefault();
+        clearErrors();
+        var form = e.target,
+            data = validate(form);
+        if(data) {
+            // console.log(data);
+            post("{% url 'website:apply' %}", data);
+        } else {
+            // something's invalid; display error message
+            errorMessage(
+                form.querySelector('input[type=submit]'),
+                "Oops! Something's invalid.",
+                {position: 'before'});
+        }
+    }
+
+    var form = document.getElementById('form');
+    form.onsubmit = submitForm;
+
+    // if errors, repopulate the form with the data the user entered, with
+    // error messages
+    {% if errors %}
+        {% for k,v in form_data.items %}
+        // repopulate form with user's data
+        var inp = document.getElementById('id_{{k}}'),
+            val = '{{v}}';
+        console.log(inp);
+        console.log(val);
+        if(inp) {
+            if(inp.tagName === 'UL' && val) {
+                if(inp.id === 'id_days_available') {
+                    var days = val.toLowerCase().split(',');
+                    days.forEach(function(d) {
+                        var cb = inp.querySelector('[value=' + d + ']');
+                        cb.checked = true;
+                    });
+                } else {
+                    var cb = inp.querySelector('[value={{v}}]');
+                    cb.checked = true;
+                }
+            } else {
+                inp.value = val;
+            }
+        }
+        {% endfor %}
+        {% for error in errors %}
+        {% for k,v in error.items %}
+        // display any server-generated error messages
+        var inp = document.getElementById('id_{{k}}'),
+            msg = "{{v}}";
+        errorMessage(inp, msg, {position: 'before'});
+        {% endfor %}
+        {% endfor %}
+    {% endif %}
+</script>
