@@ -110,7 +110,70 @@ class ContactQuestions(ContentPage, generic.TemplateView):
         "template": "website/contact_questions.html",
         "content": None}
 
-class HireUs(ContentPage, generic.TemplateView):
+class MyFormView(object):
+    def success(self, request):
+        """ Everything worked! render page with success message"""
+        context = dict(self.extra_context)
+        context['success'] = True
+        return render(request, self.template_name, context)
+
+    def error(self, request, errors):
+        """ Something went wrong. render the page with an error message """
+        context = dict(self.extra_context)
+        context['errors']    = errors
+        context['form_data'] = request.POST
+        return render(request, self.template_name, context)
+
+    def validate_phone(self, phone, error_name="phone"):
+        """ return cleaned phone number and a list of errors (valid if empty) """
+        errors = []
+        cleaned_phone = None
+        stripped_phone = re.sub(r'[ -]+', '', phone)
+        if len(stripped_phone) < 10:
+            errors.append({error_name: "Phone number doesn't have enough digits"})
+        elif len(stripped_phone) > 11:
+            errors.append(
+                {'error': "Phone number has too many digits or is not a US phone number"})
+        else:
+            hyphenated_phone = re.sub(
+                r'^(1)?(\d{3})(\d{3})(\d{4})$',
+                r'\1-\2-\3-\4',
+                stripped_phone)
+            if hyphenated_phone[0] == '-':
+                cleaned_phone = '1' + hyphenated_phone
+            else:
+                cleaned_phone = hyphenated_phone
+
+        return cleaned_phone, errors
+
+    def validate_days(self, days, field_name, no_days_message):
+        """ Takes string of comma-separated day-names e.g. "monday,thursday"
+            return list of days and list of error dicts (valid if empty) """
+        errors = []
+        days_of_the_week = [ 'monday', 'tuesday', 'wednesday', 'thursday',
+                             'friday', 'saturday', 'sunday' ]
+
+        days_list = [ d.strip().title() for d in days.split(',') if d ]
+        invalid_days_available = [ d for d in days_list
+            if d.lower() not in days_of_the_week ]
+
+        if not days_list:
+            errors.append(
+                {field_name: no_days_message})
+        for d in invalid_days_available:
+            errors.append({field_name: "%s is not a valid day of the week" % d})
+
+        return days_list, errors
+
+    def send_email(self, subject, body, debug=False):
+        """ Send email """
+        if debug:
+            print('-' * 80)
+            print(subject)
+            print('-' * 80)
+            print(body)
+        else:
+            send_mail(subject, body, 'from-address', ['to-address'])
     extra_context = {
         "header": "Hire Us",
         "template": "website/hire_us.html",
