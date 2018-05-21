@@ -16,7 +16,14 @@ class CapitalizedField(forms.CharField):
             'autocorrect': 'off',
             'autocapitalize': 'words'})
 
+class YesNoField(forms.ChoiceField):
+    def __init__(self, *args, **kwargs):
+        kwargs['widget']=forms.RadioSelect
+        kwargs['choices']=( ('yes','Yes'), ('no','No') )
+        super().__init__(*args, **kwargs)
 
+
+# forms used in hire_us.html
 class BusinessContactForm(forms.Form):
     business_name  = CapitalizedField()
     business_phone = forms.CharField()
@@ -82,6 +89,10 @@ class BusinessHireUsForm(SurveyHireUsForm, ContactTimeForm, BusinessContactForm)
 class EventHireUsForm(SurveyHireUsForm, ContactTimeForm, EventContactForm):
     pass
 
+
+# form used in login.html
+
+# form used in login.html
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
