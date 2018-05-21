@@ -15,7 +15,7 @@ from django.views     import generic, View
 
 from .models import (Announcement, Clue, Event, Pennant, PennantDistrict,
                      PennantStandings, Venue )
-from .forms  import BusinessHireUsForm, EventHireUsForm, LoginForm
+from .forms  import ApplyForm, BusinessHireUsForm, EventHireUsForm, LoginForm
 from .util   import ordinal
 
 LOGIN_URL = '/triviatimelive/login/'
