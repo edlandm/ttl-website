@@ -451,10 +451,122 @@ class Apply(ContentPage, generic.TemplateView, MyFormView):
     extra_context = {
         "header": "Apply To Host",
         "template": "website/apply.html",
+        "form": ApplyForm,
         "content": None,
         "meta_tags": [
             {"name": "robots",
              "content": "noindex, nofollow"}]}
+
+    def post(self, request):
+        """ validate form and send email with processed data """
+        form = request.POST
+
+        # either returns dict of clean data, or list of error dicts
+        cleaned_data, errors = self.validate(form)
+
+        if errors:
+            self.error(request, errors)
+        else:
+            subject = "New Host Application from " + cleaned_data.name
+            body    = self.compose_email_body(cleaned_data)
+            self.send_email(subject, body, debug=True)
+            return self.success(request)
+
+    def validate(self, form):
+        """ Validate form data
+            returns either dict of clean data or list of errors """
+        errors = []
+
+        # validate the personal/contact information
+        person_fields = [ 'name', 'phone', 'email', 'email', 'address', 'city']
+        person_dict = { key: form.get(key) for key in person_fields }
+        valid_person_dict, person_errors = self.validate_person(person_dict)
+        errors.extend(person_errors)
+
+        # validate all of the boolean fields
+        boolean_fields = [ 'is_21', 'has_excel', 'has_experience',
+            'has_laptop', 'has_media_player', 'has_transportation',
+            'survey_played_before' ]
+        bool_dict = { key: form.get(key) for key in boolean_fields }
+        valid_bool_dict, bool_errors = self.validate_booleans(bool_dict)
+        errors.extend(bool_errors)
+
+        # validate available days
+        valid_days_available, days_errors = self.validate_days(
+            form.get('days_available', ''),
+            field_name="days_available",
+            no_days_message="We need you to be available at least one night")
+        errors.extend(days_errors)
+
+        # miscellaneous fields, I couldn't find a nicer way to group these...
+        referral                     = form.get('referral')
+        survey_reason                = form.get('survey_reason')
+        survey_played_before_explain = form.get('survey_played_before_explain')
+        survey_extra_info            = form.get('survey_extra_info')
+
+        # Make sure there's an explanation if they've played before
+        if valid_bool_dict['survey_played_before'] == 'yes' and not survey_played_before_explain:
+            errors.append({"survey_played_before_explain": "Where have you played our game before?"})
+
+        return type('Application', (object,), {
+            **valid_person_dict,
+            **valid_bool_dict,
+            'days_available': valid_days_available,
+            'referral': referral,
+            'survey_reason': survey_reason,
+            'survey_played_before_explain': survey_played_before_explain,
+            'survey_extra_info': survey_extra_info}), errors
+
+    def validate_person(self, person_dict):
+        """ Return cleaned person info and list of errors (valid if empty) """
+        errors = []
+
+        # validate phone number
+        cleaned_phone, phone_errors = self.validate_phone(person_dict.get('phone'))
+        person_dict['phone'] = cleaned_phone
+        errors.extend(phone_errors)
+
+        # Lazy email validation: make sure email at least has a '@' in it
+        if '@' not in person_dict['email']:
+            errors.append({'email': "Not a valid email"})
+
+        return person_dict, errors
+
+    def validate_booleans(self, bool_dict):
+        """ Return dict of boolean fields or list of errors """
+        errors = []
+        invalid_booleans = [ k for k,v in bool_dict.items()
+            if v.lower() not in [ 'yes', 'no' ] ]
+        for b in invalid_booleans:
+            errors.append({b: "Invalid value. Needs to be 'yes' or 'no'"})
+
+        return bool_dict, errors
+
+    def compose_email_body(self, app):
+        """ Translate Application object to the body of an email
+            Return string (email body) """
+        lines = []
+        lines.append("Name: "  + app.name)
+        lines.append("Phone: " + app.phone)
+        lines.append("Email: " + app.email)
+        lines.append("Address: {street}, {city}".format(
+            street=app.address, city=app.city))
+        lines.append("They heard about us from: " + app.referral)
+        lines.append("Days Available: %s" % ', '.join(app.days_available))
+        lines.append("Is 21: " + app.is_21)
+        lines.append("Has Transportation: " + app.has_transportation)
+        lines.append("Has Laptop: " + app.has_laptop)
+        lines.append("Has Media Player: " + app.has_media_player)
+        lines.append("Has Excel: " + app.has_excel)
+        lines.append("Has Experience: " + app.has_experience)
+        lines.append("Reason for applying:\n\t" + app.survey_reason)
+        lines.append("Has Played Before: " + app.survey_played_before)
+        if app.survey_played_before == "yes":
+            lines.append("They've played at: " + app.survey_played_before_explain)
+        if app.survey_extra_info:
+            lines.append("Extra info:\n\t" + app.survey_extra_info)
+
+        return '\n'.join(lines)
 
 class Venues(ContentPage, generic.ListView):
     extra_context = {
