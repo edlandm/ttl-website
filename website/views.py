@@ -447,7 +447,7 @@ class HireUs(ContentPage, generic.TemplateView, MyFormView):
             self.send_email(subject, body)
         return
 
-class Apply(ContentPage, generic.TemplateView):
+class Apply(ContentPage, generic.TemplateView, MyFormView):
     extra_context = {
         "header": "Apply To Host",
         "template": "website/apply.html",
