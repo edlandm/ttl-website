@@ -89,8 +89,42 @@ class BusinessHireUsForm(SurveyHireUsForm, ContactTimeForm, BusinessContactForm)
 class EventHireUsForm(SurveyHireUsForm, ContactTimeForm, EventContactForm):
     pass
 
+# form used in apply.html
+class ApplyForm(forms.Form):
+    name = CapitalizedField()
+    phone = forms.CharField()
+    email = forms.EmailField()
+    address = CapitalizedField()
+    city = CapitalizedField()
 
-# form used in login.html
+    referral = CapitalizedField(
+        label="How did you hear about us?")
+    days_available = forms.MultipleChoiceField(
+        label="What nights are you available to host?",
+        widget=forms.CheckboxSelectMultiple,
+        choices=day_choices)
+    is_21 = YesNoField(label="Are you over 21?")
+    has_transportation = YesNoField(
+        label="Do you have reliable means of transportation?")
+    has_laptop = YesNoField(
+        label="Do you own a laptop?")
+    has_media_player = YesNoField(
+        label="Do you have iTunes or a similar means of playing music?")
+    has_excel = YesNoField(
+        label="Do you have Microsoft Excel or a similar means of using spreadsheets?")
+    has_experience = YesNoField(
+        label="Do you have any relevant experience? (not required, but a plus)")
+
+    survey_reason = forms.CharField(widget=forms.Textarea,
+        label="Why do you want to be a trivia host?")
+    survey_played_before = YesNoField(
+        label="Have you played our game before?")
+    survey_played_before_explain = CapitalizedField(
+        label="If so, where?",
+        required=False)
+    survey_extra_info = forms.CharField(widget=forms.Textarea,
+        label="Is there anything else you'd like to tell us about yourself?",
+        required=False)
 
 # form used in login.html
 class LoginForm(forms.Form):
