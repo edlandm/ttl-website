@@ -189,189 +189,139 @@ class HireUs(ContentPage, generic.TemplateView, MyFormView):
     def post(self, request):
         """ validate form and send email with processed data """
         form = request.POST
-        event_type = form.get('eventType')
+        event_type = form.get('event_type')
 
-        # validate/clean data and set send_email method
-        if event_type == 'Business':
-            cleaned_data = self.validate_business(form)
+        errors = []
+        if event_type == 'business':
+            cleaned_data, errors = self.validate_business(form)
             email_method = self.email_business
-        elif event_type == 'Private Event':
-            cleaned_data = self.validate_event(form)
+        elif event_type == 'event':
+            cleaned_data, errors = self.validate_event(form)
             email_method = self.email_event
         else:
             return self.error(request, 'Invalid Event Type')
 
-        if type(cleaned_data) == list:
+        if errors:
             # reload page with error messages
-            print(form)
-            print(cleaned_data)
-            return
-            return self.error(request, cleaned_data)
+            return self.error(request, errors)
         else:
             # send email and render page with success message
-            email_method(cleaned_data, debug=False)
-            return
+            email_method(cleaned_data, debug=True)
             return self.success(request)
-
-    def success(self, request):
-        """ Everything worked! render page with success message"""
-        context = self.extra_context
-        context['success'] = True
-        return render(request, self.template_name, context)
-
-    def error(self, request, message):
-        """ something went wrong. render the page with an error message """
-        context = self.extra_context
-        context['errors'] = message
-        return render(request, self.template_name, context)
 
     def validate_business(self, form):
         """ Validate and clean data for business request
-            return dict of cleaned data or errors """
+            return Business object and errors (valid if empty) """
         errors = []
         # Validate and clean Client info
-        client = self.validate_client(
-            type('Client', (object,), {
-                'name': form.get('clientName'),
-                'phone': form.get('clientPhone'),
-                'email': form.get('clientEmail')}))
-        if type(client) == list:
-            errors.extend(client)
+        client, client_errors = self.validate_client({
+            'name':  form.get('client_name'),
+            'phone': form.get('client_phone'),
+            'email': form.get('client_email')})
+        errors.extend(client_errors)
 
         # Validate and clean Contact info
-        contact = self.validate_contact(
-            type('Contact', (object,), {
-                'method': form.get('contactMethod'),
-                'days': form.get('contactDays'),
-                'time': form.get('contactTime')}))
-        if type(contact) == list:
-            errors.extend(contact)
+        contact, contact_errors = self.validate_contact({
+            'method': form.get('contact_method'),
+            'days': form.get('contact_days', ''),
+            'time': form.get('contact_time')})
+        errors.extend(contact_errors)
 
         # Validate and clean Business info
+        validated_phone, phone_errors = self.validate_phone(
+            form.get('business_phone'),
+            error_name="business_phone")
+        errors.extend(phone_errors)
+
         business = type('Business', (object,), {
             'client': client,
             'contact': contact,
-            'name': form.get('businessName'),
-            'phone': form.get('businessPhone'),
-            'type': form.get('businessType'),
-            'type_other': form.get('businessTypeOther'),
-            'previous_trivia': form.get('previousTrivia'),
-            'previous_trivia_explain': form.get('previousTriviaExplain'),
-            'survey_questions': form.get('surveyQuestions')})
+            'name': form.get('business_name'),
+            'phone': validated_phone,
+            'type': form.get('business_type'),
+            'type_other': form.get('business_type_other'),
+            'previous_trivia': form.get('previous_trivia'),
+            'previous_trivia_explain': form.get('previous_trivia_explain'),
+            'survey_questions': form.get('survey_questions')})
 
-        phone = self.validate_phone(business.phone)
-        if type(phone) == dict:
-            errors.append({'Business Phone': phone['error']})
-        else:
-            business.phone = phone
-
-        if errors:
-            return errors
-        else:
-            return business
+        return business, errors
 
     def validate_event(self, form):
         """ Validate and clean data for private event request
-            return dict of cleaned data or errors """
+            return Event object and list of errors (valid if empty) """
         errors = []
-        client_name = form.get('clientName')
-        client_phone = form.get('clientPhone')
-        client_email = form.get('clientEmail')
-        event_summary = form.get('eventSummary')
-        event_date = form.get('eventDate')
-        event_location = form.get('eventLocation')
-        event_people = form.get('eventPeople')
-        contact_method = form.get('contactMethod')
-        contact_days = form.get('contactDays')
-        contact_time = form.get('contactTime')
-        survey_questions = form.get('surveyQuestions')
-
         # Validate and clean client info
-        client = self.validate_client(
-            type('Client', (object,), {
-                'name': client_name,
-                'phone': client_phone,
-                'email': client_email}))
-        if type(client) == list:
-            errors.extend(client)
+        client, client_errors = self.validate_client({
+            'name': form.get('client_name'),
+            'phone': form.get('client_phone'),
+            'email': form.get('client_email')})
+        errors.extend(client_errors)
 
         # Validate and clean contact info
-        contact = self.validate_contact(
-            type('Contact', (object,), {
-                'method': contact_method,
-                'days': contact_days,
-                'time': contact_time}))
-        if type(contact) == list:
-            errors.extend(contact)
-
-        event = type('Event', (object,), {
-            'client': client,
-            'contact': contact,
-            'summary': event_summary,
-            'date': event_date,
-            'location': event_location,
-            'people': event_people,
-            'survey_questions': survey_questions})
+        # returns Contact object if valid, list of dicts if not
+        contact, contact_errors = self.validate_contact({
+            'method': form.get('contact_method'),
+            'days':   form.get('contact_days'),
+            'time':   form.get('contact_time')})
+        errors.extend(contact_errors)
 
         # Validate Event Date
-        event.date = re.sub(r'^(\d{4})-(\d{2})-(\d{2})', r'\2/\3/\1', event.date)
-        if not re.match(r'^\d{2}/\d{2}/(\d{2}|\d{4})$', event.date):
+        event_date = re.sub(r'^(\d{4})-(\d{2})-(\d{2})', r'\2/\3/\1',
+            form.get('event_date'))
+        if not re.match(r'^\d{2}/\d{2}/(\d{2}|\d{4})$', event_date):
             errors.append({
-                'Event Date': "Not a valid date. Needs to be: MM/DD/YY"})
+                'event_date': "Not a valid date. Needs to be: MM/DD/YY"})
 
-        if errors:
-            return errors
-        else:
-            return event
+        # Put everything together in an Event object
+        event = type('Event', (object,), {
+            'client':   client,
+            'contact':  contact,
+            'summary':  form.get('event_summary'),
+            'date':     event_date,
+            'location': form.get('event_location'),
+            'people':   form.get('event_people'),
+            'survey_questions': form.get('survey_questions')})
 
-    def validate_client(self, client):
-        """ Validate client info (takes Client object)
-            returns either Client with cleaned data, or list of errors """
+        return event, errors
+
+    def validate_client(self, client_dict):
+        """ Validate and clean client info
+            return Client object and list of errors (valid if empty) """
         errors = []
-        phone = self.validate_phone(client.phone)
-        if type(phone) == dict:
-            errors.append({'Client Phone': phone['error']})
-        else:
-            client.phone = phone
+        validated_phone, phone_errors = self.validate_phone(
+            client_dict['phone'], error_name="client_phone")
+        errors.extend(phone_errors)
 
         # Lazy email validation: make sure email at least has a '@' in it
-        if '@' not in client.email:
-            errors.append({'Client Email': "Not a valid email"})
+        if '@' not in client_dict['email']:
+            errors.append({'client_email': "Not a valid email"})
 
-        if errors:
-            return errors
-        else:
-            return client
+        return type('Client', (object,), {
+            'name':  client_dict['name'],
+            'phone': validated_phone,
+            'email': client_dict['email']}), errors
 
-    def validate_contact(self, contact):
-        """ Validate contact info (takes Contact object)
-            returns either Contact with cleaned data, or list of errors """
+    def validate_contact(self, contact_dict):
+        """ Validate and clean contact info
+            return Contact object and list of errors (valid if empty) """
         errors = []
 
+        # Make sure their contact method is either email or phone
+        if contact_dict['method'].lower() not in [ 'email', 'phone' ]:
+            errors.append(
+                {'contact_method': "Needs to be email or phone"})
+
         # Clean Contact Days
-        contact.days = [ d.strip().title() for d in contact.days.split(',')]
+        validated_days, days_errors = self.validate_days(
+            contact_dict['days'],
+            field_name="contact_days",
+            no_days_message="Isn't there at least one day we can contact you?")
+        errors.extend(days_errors)
 
-        if errors:
-            return errors
-        else:
-            return contact
-
-    def validate_phone(self, phone):
-        """ Return either a cleaned phone number or an error dict """
-        phone = re.sub(r'[ -]+', '', phone)
-        if len(phone) < 10:
-            return {'error': "Phone number doesn't have enough digits"}
-        elif len(phone) == 10 or (len(phone == 11 and phone[0] == '1')):
-            phone = re.sub(
-                r'^(1)?(\d{3})(\d{3})(\d{4})$',
-                r'\1-\2-\3-\4',
-                phone)
-            if phone[0] == '-':
-                phone = '1' + phone
-        else:
-            return {'error': "Phone number has too many digits or is not a US phone number"}
-
-        return phone
+        return type('Contact', (object,), {
+            'method': contact_dict['method'],
+            'days': validated_days,
+            'time': contact_dict['time']}), errors
 
     def email_business(self, business, debug=False):
         """ Compose and send Business email
@@ -451,14 +401,18 @@ class HireUs(ContentPage, generic.TemplateView, MyFormView):
         if event.__name__ != 'Event':
             raise TypeError('Expected Event, got ' + event.__name__)
 
-        subject = "Private Event request from {name} on {date}".format(
+        day_of_week = date(*map(int,
+            re.sub(
+                r'(.+)/(.+)/(.+)',
+                r'\3/\1/\2',
+                event.date).split('/'))).strftime("%A")
+        subject = "Private Event request from {name} for {date} ({day_of_week})".format(
             name=event.client.name,
-            date=event.date)
-        summary = "{name} is requesting a game for a private event on {date}".format(
-            name=event.client.name,
-            date=event.date)
-        event_fmt = "Event:\n\tDate: {date}\n\tLocation: {location}\n\tSummary: {summary}\n\tEstimated # of People: {people}".format(
             date=event.date,
+            day_of_week=day_of_week)
+        event_fmt = "Event:\n\tDate: {date} ({day_of_week})\n\tLocation: {location}\n\tSummary: {summary}\n\tEstimated # of People: {people}".format(
+            date=event.date,
+            day_of_week=day_of_week,
             location=event.location,
             summary=event.summary,
             people=event.people)
@@ -475,19 +429,14 @@ class HireUs(ContentPage, generic.TemplateView, MyFormView):
             time=event.contact.time)
 
         # Put it all together into a "Details" section
-        details = "Details:\n{line}\n{event}\n\n{client}\n\n{contact}".format(
-            line='--------------------------------------------------------------------------------',
+        body = "{event}\n\n{client}\n\n{contact}".format(
             event=event_fmt,
             client=client_fmt,
             contact=contact_fmt)
         # Do they have any questions for us?
         if event.survey_questions:
-            details += '\n\nQuestions:\n\t{questions}'.format(
+            body += '\n\nQuestions:\n\t{questions}'.format(
                 questions=event.survey_questions)
-
-        body = '{summary}\n\n{details}'.format(
-            summary=summary,
-            details=details)
 
         # Send email
         if debug:
@@ -497,15 +446,6 @@ class HireUs(ContentPage, generic.TemplateView, MyFormView):
         else:
             self.send_email(subject, body)
         return
-
-    def send_email(self, subject, body):
-        """ send email """
-        from django.core.mail import send_mail
-        send_mail(
-            subject,
-            body,
-            'from-address',
-            ['to-address'])
 
 class Apply(ContentPage, generic.TemplateView):
     extra_context = {
