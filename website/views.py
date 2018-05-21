@@ -174,6 +174,8 @@ class MyFormView(object):
             print(body)
         else:
             send_mail(subject, body, 'from-address', ['to-address'])
+
+class HireUs(ContentPage, generic.TemplateView, MyFormView):
     extra_context = {
         "header": "Hire Us",
         "template": "website/hire_us.html",
