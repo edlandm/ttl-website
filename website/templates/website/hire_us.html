@@ -16,13 +16,13 @@
         Is this for a game at your business, or a private party/event?
     </p>
 
-    <input type="radio" id="id_business_or_event0"
-        name="business_or_event" value="Private Event">
-    <label for="id_business_or_event0">Business</label>
+    <input type="radio" id="id_event_type0"
+        name="event_type" value="business">
+    <label for="id_event_type0">Business</label>
 
-    <input type="radio" id="id_business_or_event1"
-        name="business_or_event" value="Business">
-    <label for="id_business_or_event1">Private Event</label>
+    <input type="radio" id="id_event_type1"
+        name="event_type" value="event">
+    <label for="id_event_type1">Private Event</label>
 
     <form method="post" id="business-form">
         {% csrf_token %}
@@ -49,44 +49,44 @@
             message,
             data = {
                 csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value,
-                eventType: 'Business',
-                businessName: form.querySelector('[name=business_name]').value,
-                businessPhone: form.querySelector('[name=business_phone]')
+                event_type: document.querySelector('[name=event_type]:checked').value,
+                business_name: form.querySelector('[name=business_name]').value,
+                business_phone: form.querySelector('[name=business_phone]')
                     .value.replace(/[- ]/g, ''),
-                clientName: form.querySelector('[name=client_name]').value,
-                clientPhone: form.querySelector('[name=client_phone]')
+                client_name: form.querySelector('[name=client_name]').value,
+                client_phone: form.querySelector('[name=client_phone]')
                     .value.replace(/[- ]/, ''),
-                clientEmail: form.querySelector('[name=client_email]').value,
-                businessType: form.querySelector('[name=business_type]').value,
-                businessTypeOther: form.querySelector(
+                client_email: form.querySelector('[name=client_email]').value,
+                business_type: form.querySelector('[name=business_type]').value,
+                business_type_other: form.querySelector(
                     '[name=business_type_other]').value,
-                previousTrivia: form.querySelector(
+                previous_trivia: form.querySelector(
                     'input[name=survey_previous_trivia]:checked').value,
-                previousTriviaExplain: form.querySelector(
+                previous_trivia_explain: form.querySelector(
                     '[name=survey_previous_trivia_explain]').value,
-                contactMethod: form.querySelector('[name=contact_method]').value,
-                contactDays: Array.prototype.map.call(
+                contact_method: form.querySelector('[name=contact_method]').value,
+                contact_days: Array.prototype.map.call(
                     form.querySelectorAll('[name=contact_days]:checked'),
                     function(e) { return e.value }),
-                contactTime: form.querySelector('[name=contact_time]').value,
-                surveyQuestions: form.querySelector(
+                contact_time: form.querySelector('[name=contact_time]').value,
+                survey_questions: form.querySelector(
                     '[name=survey_questions]').value};
 
-        if(data.businessPhone.length < 10) {
+        if(data.business_phone.length < 10) {
             error = true;
-            input = form.querySelector('business_phone'),
+            input = form.querySelector('[name=business_phone]');
             message = 'Please include an area code in your phone number';
-        } else if(data.clientPhone.length < 10) {
+        } else if(data.client_phone.length < 10) {
             error = true;
-            input = form.querySelector('client_phone'),
+            input = form.querySelector('[name=client_phone]');
             message = 'Please include an area code in your phone number';
-        } else if(data.businessType === 'other' && !data.businessTypeOther) {
+        } else if(data.business_type === 'other' && !data.business_type_other) {
             error = true;
-            input = form.querySelector('business_type_other'),
+            input = form.querySelector('[name=business_type_other]');
             message = 'Could you describe what type of venue it is?';
-        } else if(data.previousTrivia === 'yes' && !data.previousTriviaExplain) {
+        } else if(data.previous_trivia === 'yes' && !data.previous_trivia_explain) {
             error = true;
-            input = form.querySelector('survey_previous_trivia_explain'),
+            input = form.querySelector('[name=survey_previous_trivia_explain]');
             message = "You said that you've had a trivia game before. " +
                 "Could you tell us whos? We're just curious.";
         }
@@ -102,41 +102,44 @@
 
     function validateEvent(form) {
         // Validate and clean form data
-        // trim all text inputs
-        forEach(form.querySelectorAll('input[type=text]'),
-            function(e) {e.value = e.value.trim();})
         var error,
             input,
             message,
             data = {
                 csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value,
-                eventType: 'Private Event',
-                clientName: form.querySelector('[name=client_name]').value,
-                clientPhone: form.querySelector('[name=client_phone]').value,
-                clientEmail: form.querySelector('[name=client_email]').value,
-                eventSummary: form.querySelector('[name=event_summary]').value,
-                eventDate: form.querySelector('[name=event_date]').value,
-                eventLocation: form.querySelector('[name=event_location]').value,
-                eventPeople: form.querySelector('[name=event_people]').value,
-                contactMethod: form.querySelector('[name=contact_method]').value,
-                contactDays: Array.prototype.map.call(
+                event_type: document.querySelector('[name=event_type]:checked').value,
+                client_name: form.querySelector('[name=client_name]').value,
+                client_phone: form.querySelector('[name=client_phone]').value,
+                client_email: form.querySelector('[name=client_email]').value,
+                event_summary: form.querySelector('[name=event_summary]').value,
+                event_date: form.querySelector('[name=event_date]').value,
+                event_location: form.querySelector('[name=event_location]').value,
+                event_people: form.querySelector('[name=event_people]').value,
+                contact_method: form.querySelector('[name=contact_method]').value,
+                contact_days: Array.prototype.map.call(
                     form.querySelectorAll('[name=contact_days]:checked'),
                     function(e) { return e.value }),
-                contactTime: form.querySelector('[name=contact_time]').value,
-                surveyQuestions: form.querySelector(
+                contact_time: form.querySelector('[name=contact_time]').value,
+                survey_questions: form.querySelector(
                     '[name=survey_questions]').value};
 
-        if(data.clientPhone.length < 10) {
+        // trim any extra spaces from the ends of values
+        forEach(Object.keys(data), function(k) {
+            var val = data[k];
+            if(typeof(val) === "string")
+                data[k] = data[k].trim();
+        });
+
+        if(data.client_phone.length < 10) {
             error = true;
             input = form.querySelector('[name=client_phone]'),
             message = 'Please include an area code in your phone number';
-        } else if(!/^\d{4}-\d{2}-\d{2}/.test(data.eventDate)) {
+        } else if(!/^\d{4}-\d{2}-\d{2}/.test(data.event_date)) {
             var altDateFmt = /^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/;
-            if(altDateFmt.test(data.eventDate)) {
+            if(altDateFmt.test(data.event_date)) {
                 data.eventDate.replace(altDateFmt, '\3-\2-\1');
             } else {
                 error = true;
-                console.log(data.eventDate);
                 input = form.querySelector('[name=event_date]'),
                 message = 'Please enter a date in this format: MM/DD/YY';
             }
@@ -175,7 +178,6 @@
         }
         if(data) {
             // post the data
-            console.log(data);
             post("{% url 'website:hire_us' %}", data);
         } else {
             // something's invalid; display error message
