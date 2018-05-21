@@ -1,0 +1,45 @@
+.error {
+    color: red;
+    font-size: 16pt;
+}
+#content h2.success {
+    color: green;
+}
+#content h2.error {
+    color: red;
+    font-size: 24pt;
+}
+ul {
+    display: flex;
+}
+li {
+    flex: 1;
+}
+
+#id_days_available {
+    display: block;
+}
+
+/*
+ * mobile only
+ */
+@media screen and (max-width: 500px) {
+    #id_days_available li {
+        padding: .2em 0;
+    }
+}
+
+/*
+ * larger screens
+ */
+@media screen and (min-width: 500px) {
+    ul {
+        width: 16em;
+    }
+    #id_days_available {
+        column-count: 2;
+    }
+    /*.error {*/
+        /*text-align: center;*/
+    /*}*/
+}
