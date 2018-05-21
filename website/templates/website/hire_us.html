@@ -1,6 +1,15 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'website/form.css' %}">
 <link rel="stylesheet" href="{% static 'website/hire_us.css' %}">
+{% if success and not errors %}
+<h2 class="success">
+    Your request has been submitted! We will try to contact you as soon as
+    possible.
+</h2>
+{% endif %}
+{% if errors %}
+<h2 class="error">Uh-oh, there was an error with your submission!</h2>
+{% endif %}
 <h2>Hire Us to host a game for you</h2>
 <div class="main-centered">
     <p>
@@ -182,4 +191,48 @@
 
     businessForm.onsubmit = submitForm;
     eventForm.onsubmit = submitForm;
+
+    // if errors, repopulate the form with the data the user entered, with
+    // error messages
+    {% if errors %}
+        {% for k,v in form_data.items %}
+        // repopulate form with user's data
+        var form = document.getElementById('{{form_data.event_type}}-form'),
+            key = '{{k}}',
+            val = '{{v}}',
+            inp;
+        if(key === 'event_type') {
+            inp = document.querySelector('[name=' +key + '][value="{{v}}"]');
+            if(inp) {
+                inp.checked = "true";
+            }
+        } else {
+            inp = form.querySelector('#id_' + key);
+            if(inp) {
+                if(inp.tagName === 'UL' && val) {
+                    if(inp.id === 'id_contact_days') {
+                        var days = val.toLowerCase().split(',');
+                        days.forEach(function(d) {
+                            var cb = inp.querySelector('[value=' + d + ']');
+                            cb.checked = true;
+                        });
+                    } else {
+                        var cb = inp.querySelector('[value={{v}}]');
+                        cb.checked = true;
+                    }
+                } else {
+                    inp.value = val;
+                }
+            }
+        }
+        {% endfor %}
+        {% for error in errors %}
+        {% for k,v in error.items %}
+        // display any server-generated error messages
+        var inp = form.querySelector('#id_{{k}}'),
+            msg = "{{v}}";
+        errorMessage(inp, msg, {position: 'before'});
+        {% endfor %}
+        {% endfor %}
+    {% endif %}
 </script>
