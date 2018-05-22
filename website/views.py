@@ -6,6 +6,7 @@ import re
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.staticfiles import finders
 from django.shortcuts import render, redirect
 from django.http      import HttpResponse, HttpResponseRedirect, Http404
 from django.utils     import dates
@@ -140,7 +141,19 @@ class Venues(ContentPage, generic.ListView):
 
     def get_queryset(self):
         """ Return all venues ordered by their days and then names """
-        return  Venue.objects.order_by("day", "name")
+        venues = Venue.objects.order_by("day", "name")
+        for venue in venues:
+            venue.logo_path = self.get_logo_path(venue)
+        return venues
+
+    def get_logo_path(self, venue):
+        """ Return path to a venue's logo (first try png, fall back to jpg) """
+        pngfile = 'website/images/logos/{}-logo.png'.format(venue.code)
+        if finders.find(pngfile):
+            logo_path = pngfile
+        else:
+            logo_path = pngfile.replace('png', 'jpg')
+        return logo_path
 
 class PennantAbout(ContentPage, generic.TemplateView):
     extra_context = {
