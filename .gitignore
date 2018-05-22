@@ -3,5 +3,5 @@
 .cs_*
 *.pyc
 ./static/
-website/static/website/images/events/
+website/static/website/images/
 migrations/
