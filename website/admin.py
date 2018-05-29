@@ -2,8 +2,8 @@ from datetime import datetime, timezone
 from django.contrib import admin
 from django.db.models.functions import Lower
 
-from .models import (Announcement, Clue, Event, Hold, Pennant, PennantDistrict,
-        PennantStandings, Venue)
+from .models import (Announcement, Clue, Event, Hold, PageContent, Pennant,
+                     PennantDistrict, PennantStandings, Venue)
 
 class VenueAdmin(admin.ModelAdmin):
     list_display = ('name', 'day', 'time', 'has_pennant', 'pennant_district', 'code')
@@ -57,7 +57,9 @@ class EventAdmin(admin.ModelAdmin):
     model = Event
     list_display = ('title', 'time', 'location', 'description')
 
-
+class PageContentAdmin(admin.ModelAdmin):
+    model = PageContent
+    list_display = ('name',)
 
 # Register your models here.
 admin.site.register(Venue, VenueAdmin)
@@ -68,3 +70,4 @@ admin.site.register(Pennant, PennantAdmin)
 admin.site.register(Announcement, AnnouncementAdmin)
 admin.site.register(Hold, HoldAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(PageContent, PageContentAdmin)
