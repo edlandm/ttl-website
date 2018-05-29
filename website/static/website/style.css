@@ -115,6 +115,20 @@ p a:visited {
     margin: auto;
 }
 
+/* bad links */
+#content a[href*=bad_url] {
+    color: hsl(0, 100%, 45%);
+    text-decoration: line-through;
+    border-bottom: none;
+}
+#content a[href*=bad_url]:after {
+    content: " [link broken]";
+    color: hsl(0, 100%, 25%);
+    font-size: .7em;
+    position: relative;
+    top: -.5em;
+}
+
 /*
  * Screen-size specific stuff
  */
