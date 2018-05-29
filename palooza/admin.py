@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Player, CheckIn, VenueDiscount
+from .models import Player, CheckIn, PageContent, VenueDiscount
 
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ("player_id", "name", "points", "phone")
@@ -19,6 +19,11 @@ class CheckInAdmin(admin.ModelAdmin):
 class VenueDiscountAdmin(admin.ModelAdmin):
     list_display = ("venue", "discount")
 
+class PageContentAdmin(admin.ModelAdmin):
+    model = PageContent
+    list_display = ('name',)
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(CheckIn, CheckInAdmin)
 admin.site.register(VenueDiscount, VenueDiscountAdmin)
+admin.site.register(PageContent, PageContentAdmin)

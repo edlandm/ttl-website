@@ -1,16 +1,4 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'website/contact_questions.css' %}" />
 
-<h2>Have something to ask us?</h2>
-<div class="main-centered">
-    <dl>
-        <dt>Phone</dt>
-        <dd><a href="tel:13609909925">360-990-9925</a></dd>
-
-        <dt>Email</dt>
-        <dd><a href="mailto:info@triviatimelive.com">info@triviatimelive.com</a></dd>
-
-        <dt>Facebook</dt>
-        <dd><a href="https://www.facebook.com/TriviaTimeLive/">facebook.com/TriviaTimeLive</a></dd>
-    </dl>
-</div>
+{{ static_content|safe }}

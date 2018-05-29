@@ -4,12 +4,15 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views  import generic, View
 
-from website.views import ContentPage, Login, LoginRequiredMixin
+from website.views import ContentPage as CP, Login, LoginRequiredMixin
 from website.models import Venue
-from .models import Player, CheckIn, VenueDiscount
+from .models import Player, CheckIn, PageContent, VenueDiscount
 import json
 
 LOGIN_URL = '/triviatimelive/login/'
+
+class ContentPage(CP):
+    content_model = PageContent
 
 class Standings(ContentPage, generic.ListView):
     extra_context = {
