@@ -649,7 +649,7 @@ class FBPost(LoginRequiredMixin, View):
                     else: # more than two games at different times
                         last = list(venues)[-1]
                         vnames = ", ".join([self.format_location(v, time=True) for v in list(venues)[:-1]]) + \
-                            ", or at" + self.format_location(last, time=True)
+                            ", or at " + self.format_location(last, time=True)
                     venues_times_patterns = [
                         "Play tonight at {venues}.".format(
                             venues=vnames),
