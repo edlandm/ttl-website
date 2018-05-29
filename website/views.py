@@ -7,13 +7,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.staticfiles import finders
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import render, redirect
 from django.http      import HttpResponse, HttpResponseRedirect, Http404
+from django.urls      import reverse
+from django.urls.exceptions import NoReverseMatch
 from django.utils     import dates
 from django.utils.text import slugify
 from django.views     import generic, View
 
-from .models          import Announcement, Clue, Event, Pennant, PennantDistrict, PennantStandings, Venue
+from .models          import (Announcement, Clue, Event, Pennant,
+                              PageContent, PennantDistrict, PennantStandings,
+                              Venue)
 from .forms           import BusinessHireUsForm, EventHireUsForm, LoginForm
 from .util            import ordinal
 
@@ -87,6 +92,50 @@ class Index(View):
 class ContentPage(View):
     template_name = "website/content_page.html"
     context_object_name = "content"
+    content_model = PageContent
+
+    def __init__(self, *args, **kwargs):
+        super(ContentPage, self).__init__(*args, **kwargs)
+        if hasattr(self, 'extra_context'):
+            static_content = self.get_static_content()
+            self.extra_context['static_content'] = static_content
+
+    def get_static_content(self):
+        """ get static content based on template name
+            return string of html """
+        if self.extra_context:
+            template = self.extra_context.get('template', '')
+            if template:
+                name = template.split('/')[-1].split('.')[0]
+                try:
+                    static_content = self.content_model.objects.get(name=name)
+                except self.content_model.DoesNotExist:
+                    return None
+
+                # parse out urls and reverse them
+                # URLs are supplied with the following markup:
+                #    url::website:about_us.html
+                # urls that can't be reversed are prepended with "#bad_url:"
+                url_regex = r'url::([\w\d_:]+)'
+                def url_reverse(match):
+                    expanded = match.expand(r'\1')
+                    try:
+                        return reverse(expanded)
+                    except NoReverseMatch:
+                        return "#bad_url:" + expanded
+                content_with_urls_reversed = re.sub(
+                    url_regex, url_reverse, static_content.content)
+
+                # parse out static files and reverse (get) them
+                # Static files are supplied with the following markup:
+                #    file::website/images/logos/TTL-stand_up_for_kids_logo.svg
+                static_regex = r'file::([\w\d\-_.:]+)'
+                static_reverse = lambda match: static(match.expand(r'\1'))
+                content_with_static_files_reversed = re.sub(
+                    static_regex, static_reverse, content_with_urls_reversed)
+
+                return content_with_static_files_reversed
+        return None
 
 class About(ContentPage, generic.TemplateView):
     extra_context = {
