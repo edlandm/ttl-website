@@ -63,3 +63,7 @@ class VenueDiscount(models.Model):
 
     def __str__(self):
         return self.venue.name + " TP-discounts"
+
+class PageContent(models.Model):
+    name = models.CharField(max_length=30)
+    content = models.TextField()

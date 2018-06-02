@@ -282,3 +282,7 @@ class Event(models.Model):
         annce.save()
         self.announcement = annce
         super(Event, self).save(*args, **kwargs)
+
+class PageContent(models.Model):
+    name = models.CharField(max_length=30)
+    content = models.TextField()
