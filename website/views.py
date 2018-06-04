@@ -96,7 +96,7 @@ class ContentPage(View):
 
     def __init__(self, *args, **kwargs):
         super(ContentPage, self).__init__(*args, **kwargs)
-        if hasattr(self, 'extra_context'):
+        if hasattr(self, 'extra_context') and self.extra_context:
             static_content = self.get_static_content()
             self.extra_context['static_content'] = static_content
 
