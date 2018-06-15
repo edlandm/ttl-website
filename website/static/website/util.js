@@ -37,6 +37,15 @@ function toggleClass(el, className) {
     }
     return el;
 };
+function ready(fn) {
+    // IE9+ compatibale vanillajs version of jQuery's $(document).ready()
+    // Found at: http://youmightnotneedjquery.com/
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
 function post(path, params, method) {
     // send post request
     method = method || "post"; // Set method to post by default if not specified.
