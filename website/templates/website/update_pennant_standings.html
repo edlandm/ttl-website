@@ -124,9 +124,8 @@
                 total.value = 2 * (n(win.value) + n(defend.value)) + n(place.value);
             }
 
-            function populateStandings(e) {
-                var venue = e.currentTarget.value,
-                    standing = standings[venue];
+            function populateStandings(venue) {
+                var standing = standings[venue];
                 clearInputs();
                 if(standing) {
                     forEach(["win", "defend", "place", "total"],
@@ -137,7 +136,7 @@
                 }
             }
 
-            function unhideInputs(e) {
+            function unhideInputs() {
                 var hidden = document.querySelectorAll(".hide");
                 forEach(hidden, function(el) {
                     removeClass(el, "hide");
@@ -184,8 +183,9 @@
 
             var select = document.getElementById("venue");
             select.onchange = function(e) {
-                unhideInputs(e);
-                populateStandings(e);
+                var venue = e.currentTarget.value;
+                unhideInputs();
+                populateStandings(venue);
             }
 
             var tboxes = document.querySelectorAll('input[type=number]');
@@ -197,6 +197,15 @@
             form.onsubmit = submit;
 
             select.focus();
+
+            ready(function() {
+                // Re-render if page is refreshed
+                var venue = document.querySelector('select').value;
+                if(venue) {
+                    unhideInputs();
+                    populateStandings(venue);
+                }
+            })
         </script>
     </body>
 </html>
