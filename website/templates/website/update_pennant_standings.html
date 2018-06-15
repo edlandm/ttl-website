@@ -15,30 +15,40 @@
                 padding: .4em;
                 font-size: 16pt;
             }
-            input[type=text], input[type=number] {
-                width: 90%;
-            }
             .hide {
                 display: none !important;
             }
             @media screen and (min-width: 500px) {
-                input[type=text], input[type=number] {
-                    width: 4em;
+                /* Desktop */
+                #standings {
+                    display: flex;
+                    flex-flow: row wrap;
+                    align-items: center;
+                    margin: .5em auto;
                 }
-                label {
+                #standings>* {
+                    flex: 1 0 auto;
+                    margin: .5em auto;
+                }
+                #standings input {
+                    height: 1.5em;
+                    max-width: 7vw;
+                }
+                #standings>div>* {
                     display: inline;
                 }
+                #standings label~input {
+                    margin-left: -.5em;
+                }
+            }
+            @media screen and (max-width: 500px) {
+                /* Mobile */
                 #standings {
-                    display: table;
-                    table-layout: fixed;
-                    width: 100%;
+                    padding-left: .5em;
                 }
-                #standings>div {
-                    display: table-row;
-                }
-                #standings>div>div {
-                    display: table-cell;
-                    width: 25%;
+                #standings input {
+                    display: block;
+                    margin: 0 auto;
                 }
             }
         </style>
@@ -66,22 +76,20 @@
                 <br>
                 <div id="standings" class="hide">
                     <div>
-                        <div>
-                            <label for="win">Win:</label>
-                            <input type="number" id="win" name="win" select>
-                        </div>
-                        <div>
-                            <label for="defend">Defend:</label>
-                            <input type="number" id="defend" name="defend" select>
-                        </div>
-                        <div>
-                            <label for="place">Place:</label>
-                            <input type="number" id="place" name="place" select>
-                        </div>
-                        <div>
-                            <label for="total">Total:</label>
-                            <input type="number" id="total" name="total" disabled>
-                        </div>
+                        <label for="win">Win:</label>
+                        <input type="number" id="win" name="win" select>
+                    </div>
+                    <div>
+                        <label for="defend">Defend:</label>
+                        <input type="number" id="defend" name="defend" select>
+                    </div>
+                    <div>
+                        <label for="place">Place:</label>
+                        <input type="number" id="place" name="place" select>
+                    </div>
+                    <div>
+                        <label for="total">Total:</label>
+                        <input type="number" id="total" name="total" disabled>
                     </div>
                 </div>
                 <input type="submit" value="Submit" class="hide">
@@ -116,9 +124,8 @@
                 total.value = 2 * (n(win.value) + n(defend.value)) + n(place.value);
             }
 
-            function populateStandings(e) {
-                var venue = e.currentTarget.value,
-                    standing = standings[venue];
+            function populateStandings(venue) {
+                var standing = standings[venue];
                 clearInputs();
                 if(standing) {
                     forEach(["win", "defend", "place", "total"],
@@ -129,7 +136,7 @@
                 }
             }
 
-            function unhideInputs(e) {
+            function unhideInputs() {
                 var hidden = document.querySelectorAll(".hide");
                 forEach(hidden, function(el) {
                     removeClass(el, "hide");
@@ -176,8 +183,9 @@
 
             var select = document.getElementById("venue");
             select.onchange = function(e) {
-                unhideInputs(e);
-                populateStandings(e);
+                var venue = e.currentTarget.value;
+                unhideInputs();
+                populateStandings(venue);
             }
 
             var tboxes = document.querySelectorAll('input[type=number]');
@@ -189,6 +197,15 @@
             form.onsubmit = submit;
 
             select.focus();
+
+            ready(function() {
+                // Re-render if page is refreshed
+                var venue = document.querySelector('select').value;
+                if(venue) {
+                    unhideInputs();
+                    populateStandings(venue);
+                }
+            })
         </script>
     </body>
 </html>
