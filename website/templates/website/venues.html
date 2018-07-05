@@ -23,11 +23,11 @@
                         <a href="{{ venue.url }}">{{ venue.name }}</a>
                     </div>
                     <div class="time">
-                        {% if venue.active_hold and venue.hold.start <= venue.next_game %}
+                        {% if venue.active_hold and venue.hold.start <= venue.next_date %}
                             {% if venue.hold.message %}
                             {{venue.hold.message}}
                             {% else %}
-                            No game {{venue.next_game|date:"F d"}}
+                            No game {{venue.next_date|date:"F d"}}
                             {% endif %}
                         {% else %}
                         {{ venue.time|time:"g:iA"|lower }}
