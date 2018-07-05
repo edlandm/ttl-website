@@ -96,7 +96,7 @@ class ContentPage(View):
 
     def __init__(self, *args, **kwargs):
         super(ContentPage, self).__init__(*args, **kwargs)
-        if hasattr(self, 'extra_context'):
+        if hasattr(self, 'extra_context') and self.extra_context:
             static_content = self.get_static_content()
             self.extra_context['static_content'] = static_content
 
@@ -192,6 +192,7 @@ class Venues(ContentPage, generic.ListView):
         """ Return all venues ordered by their days and then names """
         venues = Venue.objects.order_by("day", "name")
         for venue in venues:
+            venue.next_date = venue.next_game(ignore_hold=True)
             venue.logo_path = self.get_logo_path(venue)
         return venues
 

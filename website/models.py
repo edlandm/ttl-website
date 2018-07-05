@@ -70,12 +70,12 @@ class Venue(models.Model):
         pennant.next_game = self.next_pennant_game()
         pennant.save()
 
-    def next_game(self):
+    def next_game(self, ignore_hold=False):
         """ return next occurance of self.day as date object """
-        if not self.active_hold():
+        if ignore_hold or not self.active_hold():
             day = date.today()
         else:
-            day = self.hold.end
+            day = self.hold.end + timedelta(days=1)
         n = (self.day - day.weekday()) % 7
         return day + timedelta(days=n)
 
@@ -162,8 +162,9 @@ class Pennant(models.Model):
             return self.next_game """
         today = date.today()
         venue = self.get_current_venue()
-        if self.next_game < today:
-            self.next_game = venue.next_game()
+        venue_next_game = venue.next_game()
+        if self.next_game != venue_next_game:
+            self.next_game = venue_next_game
             self.save()
         return self.next_game
 
