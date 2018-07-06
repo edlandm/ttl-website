@@ -163,7 +163,7 @@ class Pennant(models.Model):
         today = date.today()
         venue = self.get_current_venue()
         venue_next_game = venue.next_game()
-        if self.next_game != venue_next_game:
+        if self.next_game < venue_next_game:
             self.next_game = venue_next_game
             self.save()
         return self.next_game
