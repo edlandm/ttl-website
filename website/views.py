@@ -68,7 +68,7 @@ class Index(View):
             game = pennant.update_next_game()
             preposition = 'in' if 'Bainbridge' not in venue.city() else 'on'
             if game == date.today():
-                day = "Today"
+                day = "Tonight"
             else:
                 day = game.strftime('%A, %B ') + ordinal(game.day)
             if venue.city().lower() in venue.name.lower():
