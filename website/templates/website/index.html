@@ -33,7 +33,7 @@
                     {%if game.city not in game.name %} {{ game.city }}{% endif %} ({{ game.time|time:"g:iA"|lower }})
                     </li>
                     {% if game.is_pennant_game_today %}
-                    <li class="pennant">{{ game.pennant_district }} PENNANT GAME</li>
+                    <li class="pennant">{{ game.pennant_district }} Pennant Game</li>
                     {% endif %}
                     {% empty %}
                     <li class="empty">No games tonight</li>
