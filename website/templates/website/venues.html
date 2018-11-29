@@ -15,7 +15,7 @@
     {% endifchanged %}
             <div class="venue{% if venue.active_hold %} inactive{% endif %}">
                 <div class="image">
-                    <img src="{% static venue.logo_path %}"
+                    <img src="{{ venue.logo.url }}"
                          alt="{{ venue.name }} logo">
                 </div>
                 <div class="info">
