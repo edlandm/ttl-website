@@ -193,17 +193,7 @@ class Venues(ContentPage, generic.ListView):
         venues = Venue.objects.order_by("day", "name")
         for venue in venues:
             venue.next_date = venue.next_game(ignore_hold=True)
-            venue.logo_path = self.get_logo_path(venue)
         return venues
-
-    def get_logo_path(self, venue):
-        """ Return path to a venue's logo (first try png, fall back to jpg) """
-        pngfile = 'website/images/logos/{}-logo.png'.format(venue.code)
-        if finders.find(pngfile):
-            logo_path = pngfile
-        else:
-            logo_path = pngfile.replace('png', 'jpg')
-        return logo_path
 
 class PennantAbout(ContentPage, generic.TemplateView):
     extra_context = {
