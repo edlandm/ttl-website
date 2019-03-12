@@ -25,9 +25,13 @@ class Standings(ContentPage, generic.ListView):
     def get_queryset(self):
         """ Return all players in the current year """
         today = date.today()
-        self.extra_context["years"] = (today.year, today.year + 1)
+        # TODO: this is just a temporary HOTFIX
+        # self.extra_context["years"] = (today.year, today.year + 1)
+        self.extra_context["years"] = (today.year - 1, today.year)
 
-        players = Player.objects.filter(date_added__year=today.year)
+        # players = Player.objects.filter(date_added__year=today.year)
+        # TODO: this is just a temporary HOTFIX
+        players = Player.objects.all()
         player_dicts = [ p.to_dict() for p in players ]
         return self.rank_players(player_dicts)
 
