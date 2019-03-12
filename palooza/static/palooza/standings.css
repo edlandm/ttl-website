@@ -34,6 +34,7 @@ td:nth-child(-n+2) {
     border-style: solid;
     border-color: transparent transparent white transparent;
     border-width: 0 5px 5px 5px;
+    display: block;
     height: 0;
     width: 10px;
     position: absolute;
