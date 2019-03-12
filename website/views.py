@@ -65,6 +65,10 @@ class Index(View):
         for district in pennant_districts:
             pennant = Pennant.objects.get(district=district)
             venue = pennant.get_current_venue()
+
+            if not venue:
+                break
+
             game = pennant.update_next_game()
             preposition = 'in' if 'Bainbridge' not in venue.city() else 'on'
             if game == date.today():

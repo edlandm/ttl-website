@@ -162,11 +162,14 @@ class Pennant(models.Model):
             return self.next_game """
         today = date.today()
         venue = self.get_current_venue()
-        venue_next_game = venue.next_game()
-        if self.next_game < venue_next_game:
-            self.next_game = venue_next_game
-            self.save()
-        return self.next_game
+        if venue:
+            venue_next_game = venue.next_game()
+            if self.next_game < venue_next_game:
+                self.next_game = venue_next_game
+                self.save()
+            return self.next_game
+        else:
+            return None
 
 class PennantStandings(models.Model):
     venue  = models.OneToOneField(Venue, on_delete=models.CASCADE)
