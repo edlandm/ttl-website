@@ -20,10 +20,21 @@
     }
 </style>
 
+<h2>Venue Discounts</h2>
 <table>
-    {% for discounts in content %}
+    {% for discounts in content.venue_discounts %}
     <tr>
         <td>{{discounts.venue}}</td>
+        <td>{{discounts.discount|linebreaksbr}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Extra Discounts</h2>
+<table>
+    {% for discounts in content.venue_discounts %}
+    <tr>
+        <td>{{discounts.name}}</td>
         <td>{{discounts.discount|linebreaksbr}}</td>
     </tr>
     {% endfor %}
