@@ -19,6 +19,9 @@ class CheckInAdmin(admin.ModelAdmin):
 class VenueDiscountAdmin(admin.ModelAdmin):
     list_display = ("venue", "discount")
 
+class ExtraDiscountAdmin(admin.ModelAdmin):
+    list_display = ("name", "discount")
+
 class PageContentAdmin(admin.ModelAdmin):
     model = PageContent
     list_display = ('name',)
@@ -26,4 +29,5 @@ class PageContentAdmin(admin.ModelAdmin):
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(CheckIn, CheckInAdmin)
 admin.site.register(VenueDiscount, VenueDiscountAdmin)
+admin.site.register(ExtraDiscount, ExtraDiscountAdmin)
 admin.site.register(PageContent, PageContentAdmin)
