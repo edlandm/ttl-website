@@ -1,7 +1,7 @@
 import math
 
 from django.db import models
-from datetime import datetime, date
+from datetime  import datetime, date
 
 from website.views import Venue
 
@@ -58,11 +58,19 @@ class CheckIn(models.Model):
 
 class VenueDiscount(models.Model):
     """ Special perks/discounts offered to TP players """
-    venue = models.ForeignKey(Venue, models.PROTECT)
-    discount   = models.TextField(max_length=250)
+    venue    = models.ForeignKey(Venue, models.PROTECT)
+    discount = models.TextField(max_length=250)
 
     def __str__(self):
-        return self.venue.name + " TP-discounts"
+        return "{} TP-discount".format(this.venue.name)
+
+class ExtraDiscount(models.Model):
+    """ Same as VenueDiscounts, but not for a venue """
+    name     = models.TextField(max_length=100)
+    discount = models.TextField(max_length=250)
+
+    def __str__(self):
+        return "{} TP-discount".format(this.name)
 
 class PageContent(models.Model):
     name = models.CharField(max_length=30)
