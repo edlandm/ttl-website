@@ -50,7 +50,7 @@ class Standings(ContentPage, generic.ListView):
 
 class Discounts(ContentPage, generic.ListView):
     extra_context = {
-        "header": "Venue Discounts",
+        "header": "Discounts",
         "template": "palooza/discounts.html",
         "meta_tags": [
             {"name":    "robots",
