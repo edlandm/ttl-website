@@ -70,7 +70,7 @@ class ExtraDiscount(models.Model):
     discount = models.TextField(max_length=250)
 
     def __str__(self):
-        return "{} TP-discount".format(this.name)
+        return "{} TP-discount".format(self.name)
 
 class PageContent(models.Model):
     name = models.CharField(max_length=30)
