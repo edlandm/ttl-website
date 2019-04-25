@@ -51,9 +51,9 @@ class Standings(ContentPage, generic.ListView):
 class Discounts(ContentPage, generic.ListView):
     extra_context = {
         "header": "Venue Discounts",
-        "template": "palooza/venue_discounts.html",
+        "template": "palooza/discounts.html",
         "meta_tags": [
-            {"name": "robots",
+            {"name":    "robots",
              "content": "noindex, nofollow"}]}
 
     def get_queryset(self):
