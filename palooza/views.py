@@ -6,7 +6,7 @@ from django.views  import generic, View
 
 from website.views import ContentPage as CP, Login, LoginRequiredMixin
 from website.models import Venue
-from .models import Player, CheckIn, PageContent, VenueDiscount
+from .models import Player, CheckIn, PageContent, VenueDiscount, ExtraDiscount
 import json
 
 LOGIN_URL = '/triviatimelive/login/'
@@ -48,7 +48,7 @@ class Standings(ContentPage, generic.ListView):
 
         return new_players_list
 
-class VenueDiscounts(ContentPage, generic.ListView):
+class Discounts(ContentPage, generic.ListView):
     extra_context = {
         "header": "Venue Discounts",
         "template": "palooza/venue_discounts.html",
@@ -58,8 +58,16 @@ class VenueDiscounts(ContentPage, generic.ListView):
 
     def get_queryset(self):
         """ Return all VenueDiscounts """
-        discounts = VenueDiscount.objects.all()
-        return sorted(discounts, key=lambda d: d.venue.name)
+        get_all       = lambda x: x.objects.all()
+        by_name       = lambda x: x.name
+        by_venue_name = lambda x: x.venue.name
+
+        venue_discounts = sorted(get_all(VenueDiscount), key=by_venue_name)
+        extra_discounts = sorted(get_all(ExtraDiscount), key=by_name)
+
+        return {
+            "venue_discounts": venue_discounts,
+            "extra_discounts": extra_discounts }
 
 class About(ContentPage, generic.TemplateView):
     extra_context = {
