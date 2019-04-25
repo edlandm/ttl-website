@@ -20,6 +20,7 @@
     }
 </style>
 
+{% if content.venue_discounts %}
 <h2>Venue Discounts</h2>
 <table>
     {% for discounts in content.venue_discounts %}
@@ -29,15 +30,18 @@
     </tr>
     {% endfor %}
 </table>
+{% endif %}
 
+{% if content.extra_discounts %}
 <h2>Extra Discounts</h2>
 <table>
-    {% for discounts in content.venue_discounts %}
+    {% for discounts in content.extra_discounts %}
     <tr>
         <td>{{discounts.name}}</td>
         <td>{{discounts.discount|linebreaksbr}}</td>
     </tr>
     {% endfor %}
 </table>
+{% endif %}
 
 <p><b>Check back often because we're adding new deals every day!</b></p>
