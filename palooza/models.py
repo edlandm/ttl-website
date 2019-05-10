@@ -58,7 +58,7 @@ class CheckIn(models.Model):
 
 class VenueDiscount(models.Model):
     """ Special perks/discounts offered to TP players """
-    venue    = models.ForeignKey(Venue, models.PROTECT)
+    venue    = models.ForeignKey(Venue, models.CASCADE)
     discount = models.TextField(max_length=250)
 
     def __str__(self):
