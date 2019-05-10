@@ -62,7 +62,7 @@ class VenueDiscount(models.Model):
     discount = models.TextField(max_length=250)
 
     def __str__(self):
-        return "{} TP-discount".format(this.venue.name)
+        return "{} TP-discount".format(self.venue.name)
 
 class ExtraDiscount(models.Model):
     """ Same as VenueDiscounts, but not for a venue """
