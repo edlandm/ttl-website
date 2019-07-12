@@ -1,11 +1,12 @@
 from datetime import date, datetime, timezone, timedelta
+import os
 
-from django.db    import models
-from django.utils import dates, timezone
+from django.conf       import settings
+from django.db         import models
+from django.utils      import dates, timezone
 from django.utils.text import slugify
-from django.urls  import reverse
-
-from .util            import ordinal
+from django.urls       import reverse
+from .util             import ordinal
 
 class Venue(models.Model):
     name             = models.CharField(max_length=200)
@@ -18,6 +19,9 @@ class Venue(models.Model):
     url              = models.CharField(default='', max_length=200, blank=True)
     pennant_district = models.ForeignKey("PennantDistrict", models.SET_NULL, blank=True, null=True)
     has_pennant      = models.BooleanField(default=False)
+    logo = models.ImageField(
+        upload_to="images/venues/logos/",
+        blank=True, null=True)
 
     def __str__(self):
         return self.name
